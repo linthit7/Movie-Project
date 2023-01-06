@@ -11,11 +11,15 @@ class PopularViewController: UIViewController {
     
     @IBOutlet weak var popularCollectionView: UICollectionView!
     
+    let searchController = UISearchController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         title = "Popular Movies"
+        
+        setupSearchController()
         
         popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         popularCollectionView.dataSource = self
@@ -28,6 +32,12 @@ class PopularViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         popularCollectionView.frame = view.bounds
+    }
+    
+    func setupSearchController() {
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
 }
 

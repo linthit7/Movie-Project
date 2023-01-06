@@ -11,11 +11,15 @@ class WatchlistViewController: UIViewController {
     
     @IBOutlet weak var watchlistCollectionView: UICollectionView!
     
+    let searchController = UISearchController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         title = "Favorite Movies"
+        
+        setupSearchController()
         
         watchlistCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         watchlistCollectionView.delegate = self
@@ -26,6 +30,12 @@ class WatchlistViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         watchlistCollectionView.frame = view.bounds
+    }
+    
+    func setupSearchController() {
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
 }
 

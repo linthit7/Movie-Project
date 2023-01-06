@@ -11,11 +11,15 @@ class LastestViewController: UIViewController {
 
     @IBOutlet weak var lastestCollectionView: UICollectionView!
     
+    let searchController = UISearchController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
         title = "Lastest Movies"
+        
+        setupSearchController()
         
         lastestCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         lastestCollectionView.delegate = self
@@ -28,6 +32,12 @@ class LastestViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         lastestCollectionView.frame = view.bounds
+    }
+    
+    func setupSearchController() {
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
     }
 }
 
