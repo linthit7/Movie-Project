@@ -19,7 +19,7 @@ class TabBarViewController: UITabBarController {
     private func setUpNavBar() {
         
         let popularVC = UINavigationController(rootViewController: PopularViewController())
-        let lastestVC = UINavigationController(rootViewController: LastestViewController())
+        let lastestVC = UINavigationController(rootViewController: UpcomingViewController())
         let favoriteVC = UINavigationController(rootViewController: WatchlistViewController())
         
         popularVC.tabBarItem.image = UIImage(systemName: "10.square.fill")
