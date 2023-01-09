@@ -33,6 +33,11 @@ class SearchResultsViewController: UIViewController {
         setupSearchController()
 }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        searchController.searchBar.showsCancelButton = false
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -100,6 +105,10 @@ extension SearchResultsViewController: UISearchBarDelegate {
            navigationItem.hidesSearchBarWhenScrolling = false
        }
     
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchController.searchBar.showsCancelButton = true
+        return true
+    }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         resetTempData()
         guard let text = searchBar.text else {

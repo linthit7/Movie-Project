@@ -19,9 +19,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        
-//        movieTitle.text = "Dummy"
-//        movieImage.image = UIImage(named: "one")
     }
     
     func insertTitle(with title: String) {
