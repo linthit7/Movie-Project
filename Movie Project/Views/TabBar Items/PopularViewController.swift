@@ -13,13 +13,12 @@ class PopularViewController: UIViewController {
     
     @IBOutlet weak var popularCollectionView: UICollectionView!
     
-    let searchController = UISearchController()
-     
+    let searchResultsVC = SearchResultsViewController()
+
     var popularMovieTitleArray: [String] = []
     var popularMoviePosterArray: [String] = []
-    
-    var pageCount: Int = 1
-    
+    var popularPageCount: Int = 1
+    var popularPageTotal: Int = 0
     var isPaginating: Bool = false
     
     override func viewDidLoad() {
@@ -27,19 +26,13 @@ class PopularViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         title = "Popular Movies"
-        
-        setupSearchController()
-        
-        //        popularCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+    
         popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         popularCollectionView.dataSource = self
         popularCollectionView.delegate = self
-        
         view.addSubview(popularCollectionView)
-        self.popularRequest()
-        
-        popularCollectionView.reloadData()
-        
+        configureNavItem()
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -48,89 +41,68 @@ class PopularViewController: UIViewController {
         popularCollectionView.frame = view.bounds
     }
     
-    private func setupSearchController() {
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+    private func configureNavItem() {
+        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
+        navigationItem.rightBarButtonItem = searchItem
     }
     
-    private func popularRequest(pagination: Bool = false) {
+    @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
         
-        //        let popularURL = "https://api.themoviedb.org/3/movie/popular?api_key=bc1f66a36bd7929eb408d7facc60ec74&page=1"
+        navigationController?.pushViewController(searchResultsVC, animated: true)
+    }
+    
+    
+    //MARK: - Network Request Methods
+    
+    private func popularRequest(pagination: Bool = false) {
+        let requestQueue = DispatchQueue(label: "popularRequest", qos: .userInitiated)
         
         if pagination {
             isPaginating = true
         }
-        
-        let popularURL = "\(Support.baseURL)\(Support.popularMovieEndPoint)?api_key=\(Support.apiKey)&page=\(pageCount)"
-        
-        Alamofire.request(popularURL, method: .get).responseJSON { response in
-            
-            switch response.result {
-                
-            case .success:
-                
-                let popularJSON: JSON = JSON(response.result.value!)
-                
-                let popularArrayCount = popularJSON["results"].array?.count ?? 0
-                //                print(popularArrayCount)
-                
-                for p in 0..<popularArrayCount {
+        let popularURL = "\(Support.baseURL)\(Support.popularMovieEndPoint)?api_key=\(Support.apiKey)&page=\(popularPageCount)"
+        requestQueue.async {
+            Alamofire.request(popularURL, method: .get).responseJSON { response in
+                switch response.result {
+                case .success:
                     
-                    let title = popularJSON["results"][p]["title"].stringValue
-                    let posterImage = popularJSON["results"][p]["poster_path"].stringValue
-                    
-                    self.popularMovieTitleArray.append(title)
-                    self.popularMoviePosterArray.append(posterImage)
-                    
-                    self.popularCollectionView.reloadData()
-                    //                    print(m)
-                    //                    print(title)
-                    //                    print(self.popularMovieTitleArray)
-                    //                    print(posterImage)
+                    let popularJSON: JSON = JSON(response.result.value!)
+                    let popularArrayCount = popularJSON["results"].array?.count ?? 0
+                    self.popularPageTotal = popularJSON["total_pages"].intValue
+
+                    for p in 0..<popularArrayCount {
+                        
+                        let title = popularJSON["results"][p]["title"].stringValue
+                        let posterImage = popularJSON["results"][p]["poster_path"].stringValue
+                        
+                        self.popularMovieTitleArray.append(title)
+                        self.popularMoviePosterArray.append(posterImage)
+                        self.popularCollectionView.reloadData()
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-            case .failure(let error):
-                print(error)
-            }
-            
-            if pagination {
-                self.isPaginating = false
+                if pagination {
+                    self.isPaginating = false
+                }
             }
         }
-        
     }
-    
-//    private func createSpinnerFooter() -> UIView {
-//
-//        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
-//
-//        let spinner = UIActivityIndicatorView()
-//        spinner.center = footerView.center
-//        footerView.addSubview(spinner)
-//        spinner.startAnimating()
-//
-//        return footerView
-//    }
-    
 }
 
 //MARK: - CollectionViewDelegate & DataSource Methods
 
 extension PopularViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        //        collectionView.reloadData()
         return popularMovieTitleArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
         cell.insertTitle(with: popularMovieTitleArray[indexPath.row])
         cell.insertImage(with: popularMoviePosterArray[indexPath.row])
-        //        collectionView.reloadData()
         return cell
     }
 }
@@ -157,7 +129,9 @@ extension PopularViewController: UIScrollViewDelegate {
                 return
             }
             //fetch more data
-            self.pageCount += 1
+            if popularPageCount < popularPageTotal {
+                self.popularPageCount += 1
+            }
             self.popularRequest(pagination: true)
         }
     }

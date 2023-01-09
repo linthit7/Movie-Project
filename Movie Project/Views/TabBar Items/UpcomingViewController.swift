@@ -10,33 +10,28 @@ import Alamofire
 import SwiftyJSON
 
 class UpcomingViewController: UIViewController {
-
+    
     @IBOutlet weak var upcomingCollectionView: UICollectionView!
     
-    let searchController = UISearchController()
+    let searchResultsVC = SearchResultsViewController()
     
     var upcomingMovieTitleArray: [String] = []
     var upcomingMoviePosterArray: [String] = []
-    
-    var pageCount: Int = 1
-    
+    var upcomingPageCount: Int = 1
+    var upcomingPageTotal: Int = 0
     var isPaginating: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .systemBackground
         title = "Upcoming Movies"
-        
-        setupSearchController()
         
         upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         upcomingCollectionView.delegate = self
         upcomingCollectionView.dataSource = self
-        
         view.addSubview(upcomingCollectionView)
-        self.upcomingRequest()
-        
+        configureNavItem()
     }
     
     override func viewDidLayoutSubviews() {
@@ -45,45 +40,48 @@ class UpcomingViewController: UIViewController {
         upcomingCollectionView.frame = view.bounds
     }
     
-    private func setupSearchController() {
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+    private func configureNavItem() {
+        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
+        navigationItem.rightBarButtonItem = searchItem
     }
     
-    private func upcomingRequest(pagination: Bool = false) {
+    @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
         
+        navigationController?.pushViewController(searchResultsVC, animated: true)
+    }
+    
+    //MARK: - NetworkRequest Methods
+    
+    private func upcomingRequest(pagination: Bool = false) {
+        let requestQueue = DispatchQueue(label: "popularRequest", qos: .userInitiated)
         if pagination {
             isPaginating = true
         }
+        let upcomingURL = "\(Support.baseURL)\(Support.upcomingMovieEndPoint)?api_key=\(Support.apiKey)&page=\(upcomingPageCount)"
         
-        let upcomingURL = "\(Support.baseURL)\(Support.upcomingMovieEndPoint)?api_key=\(Support.apiKey)&page=\(pageCount)"
-        
-        Alamofire.request(upcomingURL, method: .get).responseJSON { response in
-            
-            switch response.result {
-                
-            case .success:
-                
-                let upcomingJSON: JSON = JSON(response.result.value!)
-                
-                let upcomingArrayCount = upcomingJSON["results"].array?.count ?? 0
-                
-                for u in 0..<upcomingArrayCount {
+        requestQueue.async {
+            Alamofire.request(upcomingURL, method: .get).responseJSON { response in
+                switch response.result {
+                case .success:
+                    let upcomingJSON: JSON = JSON(response.result.value!)
+                    let upcomingArrayCount = upcomingJSON["results"].array?.count ?? 0
+                    self.upcomingPageTotal = upcomingJSON["total_pages"].intValue
                     
-                    let title = upcomingJSON["results"][u]["title"].stringValue
-                    let posterImage = upcomingJSON["results"][u]["poster_path"].stringValue
-                    
-                    self.upcomingMovieTitleArray.append(title)
-                    self.upcomingMoviePosterArray.append(posterImage)
-                    self.upcomingCollectionView.reloadData()
-                
+                    for u in 0..<upcomingArrayCount {
+                        
+                        let title = upcomingJSON["results"][u]["title"].stringValue
+                        let posterImage = upcomingJSON["results"][u]["poster_path"].stringValue
+                        
+                        self.upcomingMovieTitleArray.append(title)
+                        self.upcomingMoviePosterArray.append(posterImage)
+                        self.upcomingCollectionView.reloadData()
+                    }
+                case .failure(let error):
+                    print(error)
                 }
-            case .failure(let error):
-                print(error)
-            }
-            if pagination {
-                self.isPaginating = false
+                if pagination {
+                    self.isPaginating = false
+                }
             }
         }
     }
@@ -103,7 +101,6 @@ extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         cell.insertTitle(with: upcomingMovieTitleArray[indexPath.row])
         cell.insertImage(with: upcomingMoviePosterArray[indexPath.row])
-        
         return cell
     }
 }
@@ -129,8 +126,10 @@ extension UpcomingViewController: UIScrollViewDelegate {
             guard !isPaginating else {
                 return
             }
-            //fetch more data
-            self.pageCount += 1
+            if upcomingPageCount < upcomingPageTotal {
+                //fetch more data
+                self.upcomingPageCount += 1
+            }
             self.upcomingRequest(pagination: true)
         }
     }

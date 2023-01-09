@@ -14,6 +14,8 @@
 		F92448FE2967CC0200C26EAE /* MovieCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F92448FC2967CC0200C26EAE /* MovieCollectionViewCell.xib */; };
 		F92449002967D66400C26EAE /* one.png in Resources */ = {isa = PBXBuildFile; fileRef = F92448FF2967D66400C26EAE /* one.png */; };
 		F924490F296886FB00C26EAE /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924490E296886FB00C26EAE /* Support.swift */; };
+		F9244912296AFF0400C26EAE /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */; };
+		F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */; };
 		F9FD03CA2966B1AD0039FA0B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FD03C92966B1AD0039FA0B /* AppDelegate.swift */; };
 		F9FD03CC2966B1AD0039FA0B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FD03CB2966B1AD0039FA0B /* SceneDelegate.swift */; };
 		F9FD03D42966B1AD0039FA0B /* Movie_Project.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F9FD03D22966B1AD0039FA0B /* Movie_Project.xcdatamodeld */; };
@@ -36,6 +38,8 @@
 		F92448FC2967CC0200C26EAE /* MovieCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieCollectionViewCell.xib; sourceTree = "<group>"; };
 		F92448FF2967D66400C26EAE /* one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = one.png; sourceTree = "<group>"; };
 		F924490E296886FB00C26EAE /* Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support.swift; sourceTree = "<group>"; };
+		F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
 		F9FD03C62966B1AD0039FA0B /* Movie Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Movie Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9FD03C92966B1AD0039FA0B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F9FD03CB2966B1AD0039FA0B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +92,19 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		F9244914296B018000C26EAE /* TabBar Items */ = {
+			isa = PBXGroup;
+			children = (
+				F9FD03E42966BA2A0039FA0B /* PopularViewController.swift */,
+				F9FD03E52966BA2A0039FA0B /* PopularViewController.xib */,
+				F9FD03E92966BA490039FA0B /* UpcomingViewController.swift */,
+				F9FD03EA2966BA490039FA0B /* UpcomingViewController.xib */,
+				F9FD03ED2966BA560039FA0B /* WatchlistViewController.swift */,
+				F9FD03EE2966BA560039FA0B /* WatchlistViewController.xib */,
+			);
+			path = "TabBar Items";
+			sourceTree = "<group>";
+		};
 		F9FD03BD2966B1AC0039FA0B = {
 			isa = PBXGroup;
 			children = (
@@ -127,12 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				F92448FA2967CBE000C26EAE /* Cell */,
-				F9FD03E42966BA2A0039FA0B /* PopularViewController.swift */,
-				F9FD03E52966BA2A0039FA0B /* PopularViewController.xib */,
-				F9FD03E92966BA490039FA0B /* UpcomingViewController.swift */,
-				F9FD03EA2966BA490039FA0B /* UpcomingViewController.xib */,
-				F9FD03ED2966BA560039FA0B /* WatchlistViewController.swift */,
-				F9FD03EE2966BA560039FA0B /* WatchlistViewController.xib */,
+				F9244914296B018000C26EAE /* TabBar Items */,
+				F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */,
+				F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -212,6 +226,7 @@
 				F9FD03E72966BA2A0039FA0B /* PopularViewController.xib in Resources */,
 				F9FD03F02966BA560039FA0B /* WatchlistViewController.xib in Resources */,
 				F9FD03D62966B1AF0039FA0B /* Assets.xcassets in Resources */,
+				F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +288,7 @@
 				F92448F82966D43E00C26EAE /* TabBarViewController.swift in Sources */,
 				F9FD03CC2966B1AD0039FA0B /* SceneDelegate.swift in Sources */,
 				F9FD03EB2966BA490039FA0B /* UpcomingViewController.swift in Sources */,
+				F9244912296AFF0400C26EAE /* SearchResultsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
