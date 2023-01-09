@@ -13,6 +13,8 @@ struct Support {
     static let apiKey: String = "bc1f66a36bd7929eb408d7facc60ec74"
     
     static let posterImageURL: String = "https://image.tmdb.org/t/p/w500"
+    static let backDropImageURL: String =
+    "https://image.tmdb.org/t/p/w500"
     
     static let popularMovieEndPoint: String = "/movie/popular"
     static let upcomingMovieEndPoint: String = "/movie/upcoming"

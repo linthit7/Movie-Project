@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		B85EAC4C48AA51A81B0DC221 /* Pods_Movie_Project.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907937DC5D1FAB6510005ABB /* Pods_Movie_Project.framework */; };
+		F90054F2296BF0FD004F44C8 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90054F0296BF0FD004F44C8 /* MovieDetailViewController.swift */; };
+		F90054F3296BF0FD004F44C8 /* MovieDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F90054F1296BF0FD004F44C8 /* MovieDetailViewController.xib */; };
+		F90054F5296C152D004F44C8 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90054F4296C152D004F44C8 /* Genre.swift */; };
 		F92448F82966D43E00C26EAE /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92448F62966D43E00C26EAE /* TabBarViewController.swift */; };
 		F92448F92966D43E00C26EAE /* TabBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F92448F72966D43E00C26EAE /* TabBarViewController.xib */; };
 		F92448FD2967CC0200C26EAE /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92448FB2967CC0200C26EAE /* MovieCollectionViewCell.swift */; };
@@ -31,6 +34,9 @@
 		1C3DA18C0B75F31BDCFB5293 /* Pods-Movie Project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Movie Project.debug.xcconfig"; path = "Target Support Files/Pods-Movie Project/Pods-Movie Project.debug.xcconfig"; sourceTree = "<group>"; };
 		907937DC5D1FAB6510005ABB /* Pods_Movie_Project.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Movie_Project.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC8EDE67AF88C522838C833F /* Pods-Movie Project.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Movie Project.release.xcconfig"; path = "Target Support Files/Pods-Movie Project/Pods-Movie Project.release.xcconfig"; sourceTree = "<group>"; };
+		F90054F0296BF0FD004F44C8 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
+		F90054F1296BF0FD004F44C8 /* MovieDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieDetailViewController.xib; sourceTree = "<group>"; };
+		F90054F4296C152D004F44C8 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		F92448F62966D43E00C26EAE /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TabBarViewController.swift; path = Views/TabBarViewController.swift; sourceTree = "<group>"; };
 		F92448F72966D43E00C26EAE /* TabBarViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TabBarViewController.xib; path = Views/TabBarViewController.xib; sourceTree = "<group>"; };
 		F92448FB2967CC0200C26EAE /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -86,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				F924490E296886FB00C26EAE /* Support.swift */,
+				F90054F4296C152D004F44C8 /* Genre.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -144,6 +151,8 @@
 				F9244914296B018000C26EAE /* TabBar Items */,
 				F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */,
 				F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */,
+				F90054F0296BF0FD004F44C8 /* MovieDetailViewController.swift */,
+				F90054F1296BF0FD004F44C8 /* MovieDetailViewController.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -216,6 +225,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F90054F3296BF0FD004F44C8 /* MovieDetailViewController.xib in Resources */,
 				F92448F92966D43E00C26EAE /* TabBarViewController.xib in Resources */,
 				F9FD03EC2966BA490039FA0B /* UpcomingViewController.xib in Resources */,
 				F92448FE2967CC0200C26EAE /* MovieCollectionViewCell.xib in Resources */,
@@ -278,12 +288,14 @@
 				F924490F296886FB00C26EAE /* Support.swift in Sources */,
 				F9FD03E62966BA2A0039FA0B /* PopularViewController.swift in Sources */,
 				F9FD03D42966B1AD0039FA0B /* Movie_Project.xcdatamodeld in Sources */,
+				F90054F5296C152D004F44C8 /* Genre.swift in Sources */,
 				F92448FD2967CC0200C26EAE /* MovieCollectionViewCell.swift in Sources */,
 				F9FD03EF2966BA560039FA0B /* WatchlistViewController.swift in Sources */,
 				F9FD03CA2966B1AD0039FA0B /* AppDelegate.swift in Sources */,
 				F92448F82966D43E00C26EAE /* TabBarViewController.swift in Sources */,
 				F9FD03CC2966B1AD0039FA0B /* SceneDelegate.swift in Sources */,
 				F9FD03EB2966BA490039FA0B /* UpcomingViewController.swift in Sources */,
+				F90054F2296BF0FD004F44C8 /* MovieDetailViewController.swift in Sources */,
 				F9244912296AFF0400C26EAE /* SearchResultsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

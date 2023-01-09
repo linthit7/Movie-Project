@@ -68,8 +68,6 @@ class SearchResultsViewController: UIViewController {
                         let title = searchJSON["results"][s]["title"].stringValue
                         let posterImage = searchJSON["results"][s]["poster_path"].stringValue
                         
-                        print(title)
-                        print(posterImage)
                         self.searchMovieTitleArray.append(title)
                         self.searchMoviePosterArray.append(posterImage)
                         self.searchResultsCollectionView.reloadData()

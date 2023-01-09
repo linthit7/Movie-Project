@@ -21,6 +21,13 @@ class PopularViewController: UIViewController {
     var popularPageTotal: Int = 0
     var isPaginating: Bool = false
     
+    var popularMovieBackDropArray: [String] = []
+//    var popularGenreArray
+    var popularMovieOverViewArray: [String] = []
+    var popularMovieReleaseDateArray: [String] = []
+    var popularMovieRatingArray: [Float] = []
+    var popularMovieIDArray: [Int] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,6 +58,21 @@ class PopularViewController: UIViewController {
         navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
+    private func movieDetailPassingMethod(for indexPath: IndexPath) {
+        let movieDetailVC = MovieDetailViewController()
+        
+        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+        
+        dataPassingQueue.async {
+            movieDetailVC.movieTitle = self.popularMovieTitleArray[indexPath.row]
+            movieDetailVC.backDropImage = self.popularMovieBackDropArray[indexPath.row]
+            movieDetailVC.overView = self.popularMovieOverViewArray[indexPath.row]
+            movieDetailVC.releaseDate = self.popularMovieReleaseDateArray[indexPath.row]
+            movieDetailVC.rating = self.popularMovieRatingArray[indexPath.row]
+            movieDetailVC.movieID = self.popularMovieIDArray[indexPath.row]
+        }
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
     
     //MARK: - Network Request Methods
     
@@ -74,9 +96,20 @@ class PopularViewController: UIViewController {
                         
                         let title = popularJSON["results"][p]["title"].stringValue
                         let posterImage = popularJSON["results"][p]["poster_path"].stringValue
+                        let backDropImage = popularJSON["results"][p]["backdrop_path"].stringValue
+                        let overView = popularJSON["results"][p]["overview"].stringValue
+                        let releaseDate = popularJSON["results"][p]["release_date"].stringValue
+                        let rating = popularJSON["results"][p]["vote_average"].floatValue
+                        let movieID = popularJSON["results"][p]["id"].intValue
                         
                         self.popularMovieTitleArray.append(title)
                         self.popularMoviePosterArray.append(posterImage)
+                        self.popularMovieBackDropArray.append(backDropImage)
+                        self.popularMovieOverViewArray.append(overView)
+                        self.popularMovieReleaseDateArray.append(releaseDate)
+                        self.popularMovieRatingArray.append(rating)
+                        self.popularMovieIDArray.append(movieID)
+                        
                         self.popularCollectionView.reloadData()
                     }
                 case .failure(let error):
@@ -104,6 +137,10 @@ extension PopularViewController: UICollectionViewDelegate, UICollectionViewDataS
         cell.insertTitle(with: popularMovieTitleArray[indexPath.row])
         cell.insertImage(with: popularMoviePosterArray[indexPath.row])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        movieDetailPassingMethod(for: indexPath)
     }
 }
 
