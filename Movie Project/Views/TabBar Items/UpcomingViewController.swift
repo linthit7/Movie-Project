@@ -21,6 +21,13 @@ class UpcomingViewController: UIViewController {
     var upcomingPageTotal: Int = 0
     var isPaginating: Bool = false
     
+    var upcomingMovieBackDropArray: [String] = []
+    var upcomingMovieOverViewArray: [String] = []
+    var upcomingMovieReleaseDateArray: [String] = []
+    var upcomingMovieRatingArray: [Float] = []
+    var upcomingMovieIDArray: [Int] = []
+    var upcomingMovieGenreIDArray: [Any] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,6 +57,23 @@ class UpcomingViewController: UIViewController {
         navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
+    private func movieDetailPassingMethod(for indexPath: IndexPath) {
+        let movieDetailVC = MovieDetailViewController()
+        
+        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+        
+        dataPassingQueue.async {
+            movieDetailVC.movieTitle = self.upcomingMovieTitleArray[indexPath.row]
+            movieDetailVC.backDropImage = self.upcomingMovieBackDropArray[indexPath.row]
+            movieDetailVC.overView = self.upcomingMovieOverViewArray[indexPath.row]
+            movieDetailVC.releaseDate = self.upcomingMovieReleaseDateArray[indexPath.row]
+            movieDetailVC.rating = self.upcomingMovieRatingArray[indexPath.row]
+            movieDetailVC.movieID = self.upcomingMovieIDArray[indexPath.row]
+            movieDetailVC.genreID = self.upcomingMovieGenreIDArray[indexPath.row]
+        }
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+    
     //MARK: - NetworkRequest Methods
     
     private func upcomingRequest(pagination: Bool = false) {
@@ -71,9 +95,23 @@ class UpcomingViewController: UIViewController {
                         
                         let title = upcomingJSON["results"][u]["title"].stringValue
                         let posterImage = upcomingJSON["results"][u]["poster_path"].stringValue
+                        let backDropImage = upcomingJSON["results"][u]["backdrop_path"].stringValue
+                        let overView = upcomingJSON["results"][u]["overview"].stringValue
+                        let releaseDate = upcomingJSON["results"][u]["release_date"].stringValue
+                        let rating = upcomingJSON["results"][u]["vote_average"].floatValue
+                        let movieID = upcomingJSON["results"][u]["id"].intValue
+                        let genreID = upcomingJSON["results"][u]["genre_ids"].arrayValue
+                        
                         
                         self.upcomingMovieTitleArray.append(title)
                         self.upcomingMoviePosterArray.append(posterImage)
+                        self.upcomingMovieBackDropArray.append(backDropImage)
+                        self.upcomingMovieOverViewArray.append(overView)
+                        self.upcomingMovieReleaseDateArray.append(releaseDate)
+                        self.upcomingMovieRatingArray.append(rating)
+                        self.upcomingMovieIDArray.append(movieID)
+                        self.upcomingMovieGenreIDArray.append(genreID)
+                        
                         self.upcomingCollectionView.reloadData()
                     }
                 case .failure(let error):
@@ -102,6 +140,9 @@ extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.insertTitle(with: upcomingMovieTitleArray[indexPath.row])
         cell.insertImage(with: upcomingMoviePosterArray[indexPath.row])
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        movieDetailPassingMethod(for: indexPath)
     }
 }
 

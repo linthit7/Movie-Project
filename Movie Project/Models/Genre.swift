@@ -8,9 +8,7 @@
 import Foundation
 
 struct Genre {
-    
     let genreID: Int
-    
     var genreName: String {
         switch genreID {
         case 28: return "Action"
@@ -32,8 +30,7 @@ struct Genre {
         case 53: return "Thriller"
         case 10752: return "War"
         case 37: return "Western"
-        default:
-            return ""
+        default: return ""
         }
     }
 }

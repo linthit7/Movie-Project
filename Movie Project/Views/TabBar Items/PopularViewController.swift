@@ -22,12 +22,12 @@ class PopularViewController: UIViewController {
     var isPaginating: Bool = false
     
     var popularMovieBackDropArray: [String] = []
-//    var popularGenreArray
     var popularMovieOverViewArray: [String] = []
     var popularMovieReleaseDateArray: [String] = []
     var popularMovieRatingArray: [Float] = []
     var popularMovieIDArray: [Int] = []
-    
+    var popularMovieGenreIDArray: [Any] = []
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,7 +39,6 @@ class PopularViewController: UIViewController {
         popularCollectionView.delegate = self
         view.addSubview(popularCollectionView)
         configureNavItem()
-
     }
     
     override func viewDidLayoutSubviews() {
@@ -70,6 +69,7 @@ class PopularViewController: UIViewController {
             movieDetailVC.releaseDate = self.popularMovieReleaseDateArray[indexPath.row]
             movieDetailVC.rating = self.popularMovieRatingArray[indexPath.row]
             movieDetailVC.movieID = self.popularMovieIDArray[indexPath.row]
+            movieDetailVC.genreID = self.popularMovieGenreIDArray[indexPath.row]
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
@@ -101,6 +101,7 @@ class PopularViewController: UIViewController {
                         let releaseDate = popularJSON["results"][p]["release_date"].stringValue
                         let rating = popularJSON["results"][p]["vote_average"].floatValue
                         let movieID = popularJSON["results"][p]["id"].intValue
+                        let genreID = popularJSON["results"][p]["genre_ids"].arrayValue
                         
                         self.popularMovieTitleArray.append(title)
                         self.popularMoviePosterArray.append(posterImage)
@@ -109,7 +110,8 @@ class PopularViewController: UIViewController {
                         self.popularMovieReleaseDateArray.append(releaseDate)
                         self.popularMovieRatingArray.append(rating)
                         self.popularMovieIDArray.append(movieID)
-                        
+                        self.popularMovieGenreIDArray.append(genreID)
+
                         self.popularCollectionView.reloadData()
                     }
                 case .failure(let error):

@@ -22,6 +22,13 @@ class SearchResultsViewController: UIViewController {
     var isPaginating: Bool = false
     var queryName: String = ""
     
+    var searchMovieBackDropArray: [String] = []
+    var searchMovieOverViewArray: [String] = []
+    var searchMovieReleaseDateArray: [String] = []
+    var searchMovieRatingArray: [Float] = []
+    var searchMovieIDArray: [Int] = []
+    var searchMovieGenreIDArray: [Any] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,6 +50,24 @@ class SearchResultsViewController: UIViewController {
         
         searchResultsCollectionView.frame = view.bounds
     }
+    
+    private func movieDetailPassingMethod(for indexPath: IndexPath) {
+        let movieDetailVC = MovieDetailViewController()
+        
+        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+        
+        dataPassingQueue.async {
+            movieDetailVC.movieTitle = self.searchMovieTitleArray[indexPath.row]
+            movieDetailVC.backDropImage = self.searchMovieBackDropArray[indexPath.row]
+            movieDetailVC.overView = self.searchMovieOverViewArray[indexPath.row]
+            movieDetailVC.releaseDate = self.searchMovieReleaseDateArray[indexPath.row]
+            movieDetailVC.rating = self.searchMovieRatingArray[indexPath.row]
+            movieDetailVC.movieID = self.searchMovieIDArray[indexPath.row]
+            movieDetailVC.genreID = self.searchMovieGenreIDArray[indexPath.row]
+        } 
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+
     //MARK: - Network Request Methods
     
     func searchRequest(queryName: String = "", pagination: Bool = false) {
@@ -60,16 +85,28 @@ class SearchResultsViewController: UIViewController {
                     let searchJSON: JSON = JSON(response.result.value!)
                     let searchArrayCount = searchJSON["results"].array?.count ?? 0
                     self.searchPageTotal = searchJSON["total_pages"].intValue
-                    print(self.searchPageTotal)
                     
                     
                     for s in 0..<searchArrayCount {
                         
                         let title = searchJSON["results"][s]["title"].stringValue
                         let posterImage = searchJSON["results"][s]["poster_path"].stringValue
+                        let backDropImage = searchJSON["results"][s]["backdrop_path"].stringValue
+                        let overView = searchJSON["results"][s]["overview"].stringValue
+                        let releaseDate = searchJSON["results"][s]["release_date"].stringValue
+                        let rating = searchJSON["results"][s]["vote_average"].floatValue
+                        let movieID = searchJSON["results"][s]["id"].intValue
+                        let genreID = searchJSON["results"][s]["genre_ids"].arrayValue
                         
                         self.searchMovieTitleArray.append(title)
                         self.searchMoviePosterArray.append(posterImage)
+                        self.searchMovieBackDropArray.append(backDropImage)
+                        self.searchMovieOverViewArray.append(overView)
+                        self.searchMovieReleaseDateArray.append(releaseDate)
+                        self.searchMovieRatingArray.append(rating)
+                        self.searchMovieIDArray.append(movieID)
+                        self.searchMovieGenreIDArray.append(genreID)
+                        
                         self.searchResultsCollectionView.reloadData()
                     }
                     
@@ -144,6 +181,9 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
             }
             return cell
         }
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        movieDetailPassingMethod(for: indexPath)
     }
 }
 
