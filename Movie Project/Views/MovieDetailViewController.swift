@@ -20,6 +20,8 @@ class MovieDetailViewController: UIViewController {
     
     @IBOutlet weak var similarMovieCollectionView: UICollectionView!
     
+    var favoriteState: Bool = false
+    
     var movieTitle: String?
     var overView: String?
     var backDropImage: String?
@@ -42,9 +44,38 @@ class MovieDetailViewController: UIViewController {
         similarMovieCollectionView.delegate = self
         similarMovieCollectionView.dataSource = self
         view.addSubview(similarMovieCollectionView)
+        
+        configureNavItem()
     }
     
-    func insertImage() {
+    private func configureNavItem() {
+        navigationController?.navigationBar.tintColor = .label
+        
+        switch favoriteState {
+        case false:
+            let favoriteItem = UIBarButtonItem(image: UIImage(systemName: "star"), style: .plain, target: self, action: #selector(favoriteAdd(_:)))
+            navigationItem.rightBarButtonItem  = favoriteItem
+        case true:
+            let favoriteItem = UIBarButtonItem(image: UIImage(systemName: "star.fill"), style: .plain, target: self, action: #selector(favoriteRemove(_:)))
+            navigationItem.rightBarButtonItem  = favoriteItem
+        }
+    }
+    
+    @objc private func favoriteAdd(_ sender: UIButton) {
+        favoriteState = true
+        configureNavItem()
+        print("FavoriteItem Add")
+        print(favoriteState)
+    }
+    
+    @objc private func favoriteRemove(_ sender: UIButton) {
+        favoriteState = false
+        configureNavItem()
+        print("FavoriteItem Remove")
+        print(favoriteState)
+    }
+    
+    private func insertImage() {
         
         let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(backDropImage!)")
         DispatchQueue.main.async {

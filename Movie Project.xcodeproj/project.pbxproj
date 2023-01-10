@@ -11,7 +11,6 @@
 		F90054F2296BF0FD004F44C8 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90054F0296BF0FD004F44C8 /* MovieDetailViewController.swift */; };
 		F90054F3296BF0FD004F44C8 /* MovieDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F90054F1296BF0FD004F44C8 /* MovieDetailViewController.xib */; };
 		F90054F5296C152D004F44C8 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = F90054F4296C152D004F44C8 /* Genre.swift */; };
-		F90054F9296C5ACB004F44C8 /* one.png in Resources */ = {isa = PBXBuildFile; fileRef = F90054F8296C5ACB004F44C8 /* one.png */; };
 		F92448F82966D43E00C26EAE /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92448F62966D43E00C26EAE /* TabBarViewController.swift */; };
 		F92448F92966D43E00C26EAE /* TabBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F92448F72966D43E00C26EAE /* TabBarViewController.xib */; };
 		F92448FD2967CC0200C26EAE /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92448FB2967CC0200C26EAE /* MovieCollectionViewCell.swift */; };
@@ -38,9 +37,8 @@
 		F90054F0296BF0FD004F44C8 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		F90054F1296BF0FD004F44C8 /* MovieDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieDetailViewController.xib; sourceTree = "<group>"; };
 		F90054F4296C152D004F44C8 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
-		F90054F8296C5ACB004F44C8 /* one.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = one.png; sourceTree = "<group>"; };
-		F92448F62966D43E00C26EAE /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TabBarViewController.swift; path = Views/TabBarViewController.swift; sourceTree = "<group>"; };
-		F92448F72966D43E00C26EAE /* TabBarViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = TabBarViewController.xib; path = Views/TabBarViewController.xib; sourceTree = "<group>"; };
+		F92448F62966D43E00C26EAE /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		F92448F72966D43E00C26EAE /* TabBarViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabBarViewController.xib; sourceTree = "<group>"; };
 		F92448FB2967CC0200C26EAE /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		F92448FC2967CC0200C26EAE /* MovieCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieCollectionViewCell.xib; sourceTree = "<group>"; };
 		F924490E296886FB00C26EAE /* Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support.swift; sourceTree = "<group>"; };
@@ -135,14 +133,11 @@
 			children = (
 				F9FD03C92966B1AD0039FA0B /* AppDelegate.swift */,
 				F9FD03CB2966B1AD0039FA0B /* SceneDelegate.swift */,
-				F92448F62966D43E00C26EAE /* TabBarViewController.swift */,
-				F92448F72966D43E00C26EAE /* TabBarViewController.xib */,
 				F92449092968784D00C26EAE /* Models */,
 				F9FD03E82966BA310039FA0B /* Views */,
 				F9FD03D52966B1AF0039FA0B /* Assets.xcassets */,
 				F9FD03DA2966B1AF0039FA0B /* Info.plist */,
 				F9FD03D22966B1AD0039FA0B /* Movie_Project.xcdatamodeld */,
-				F90054F8296C5ACB004F44C8 /* one.png */,
 			);
 			path = "Movie Project";
 			sourceTree = "<group>";
@@ -150,6 +145,8 @@
 		F9FD03E82966BA310039FA0B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F92448F62966D43E00C26EAE /* TabBarViewController.swift */,
+				F92448F72966D43E00C26EAE /* TabBarViewController.xib */,
 				F92448FA2967CBE000C26EAE /* Cell */,
 				F9244914296B018000C26EAE /* TabBar Items */,
 				F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */,
@@ -234,7 +231,6 @@
 				F92448FE2967CC0200C26EAE /* MovieCollectionViewCell.xib in Resources */,
 				F9FD03E72966BA2A0039FA0B /* PopularViewController.xib in Resources */,
 				F9FD03F02966BA560039FA0B /* WatchlistViewController.xib in Resources */,
-				F90054F9296C5ACB004F44C8 /* one.png in Resources */,
 				F9FD03D62966B1AF0039FA0B /* Assets.xcassets in Resources */,
 				F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */,
 			);

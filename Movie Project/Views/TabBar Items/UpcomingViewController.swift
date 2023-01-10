@@ -48,6 +48,7 @@ class UpcomingViewController: UIViewController {
     }
     
     private func configureNavItem() {
+        navigationController?.navigationBar.tintColor = .label
         let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
         navigationItem.rightBarButtonItem = searchItem
     }
