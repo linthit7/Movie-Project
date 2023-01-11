@@ -9,6 +9,7 @@ import UIKit
 import SDWebImage
 import Alamofire
 import SwiftyJSON
+import CoreData
 
 class MovieDetailViewController: UIViewController {
     
@@ -20,7 +21,7 @@ class MovieDetailViewController: UIViewController {
     
     @IBOutlet weak var similarMovieCollectionView: UICollectionView!
     
-    var favoriteState: Bool = false
+    var favoriteState: Bool?
     
     var movieTitle: String?
     var overView: String?
@@ -31,12 +32,13 @@ class MovieDetailViewController: UIViewController {
     var genreID: Any?
     var genreIDArrayCount: Int?
     var genreNameArray: [String] = []
+    var posterImage: String?
     
     var similarMovieTitleArray: [String] = []
     var similarMoviePosterArray: [String] = []
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         setUpMovieDetail()
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -44,7 +46,7 @@ class MovieDetailViewController: UIViewController {
         similarMovieCollectionView.delegate = self
         similarMovieCollectionView.dataSource = self
         view.addSubview(similarMovieCollectionView)
-        
+        checkFavoriteState()
         configureNavItem()
     }
     
@@ -58,21 +60,103 @@ class MovieDetailViewController: UIViewController {
         case true:
             let favoriteItem = UIBarButtonItem(image: UIImage(systemName: "star.fill"), style: .plain, target: self, action: #selector(favoriteRemove(_:)))
             navigationItem.rightBarButtonItem  = favoriteItem
+        default: return
         }
     }
     
     @objc private func favoriteAdd(_ sender: UIButton) {
         favoriteState = true
         configureNavItem()
-        print("FavoriteItem Add")
-        print(favoriteState)
+        moviePersist()
+    }
+    
+    private func checkFavoriteState() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
+        fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(self.movieID!)")
+        do {
+            let object = try managedContext.fetch(fetchRequest)
+            if object.isEmpty {
+                favoriteState = false
+            } else {
+                favoriteState = true
+            }
+        } catch let error {
+            print(error)
+        }
+    }
+    
+    private func fetchAnObject() -> Bool? {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return nil}
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
+        fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(self.movieID!)")
+        do {
+            let object = try managedContext.fetch(fetchRequest)
+            if object.isEmpty {return true} else {return false}
+        } catch let error {
+            print(error)
+        }
+        return nil
+    }
+    
+    private func moviePersist() {
+        
+        switch fetchAnObject() {
+        case true:
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+            let managedContext = appDelegate.persistentContainer.viewContext
+            
+            guard let movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext) else {return}
+            let movie = NSManagedObject(entity: movieEntity, insertInto: managedContext)
+            movie.setValue(movieID, forKey: "movieID")
+            movie.setValue(movieTitle, forKey: "movieTitle")
+            movie.setValue(backDropImage, forKey: "backDropImage")
+            movie.setValue(overView, forKey: "overView")
+            movie.setValue(releaseDate, forKey: "releaseDate")
+            movie.setValue(rating, forKey: "rating")
+            movie.setValue(favoriteState, forKey: "favoriteState")
+            movie.setValue(posterImage, forKey: "posterImage")
+            do {
+                try managedContext.save()
+                print("Data saved")
+            } catch let error {
+                print(error)
+            }
+        case false: return print("Object found")
+        default: return
+        }
+        
     }
     
     @objc private func favoriteRemove(_ sender: UIButton) {
         favoriteState = false
         configureNavItem()
-        print("FavoriteItem Remove")
-        print(favoriteState)
+        movieDelete()
+    }
+    
+    private func movieDelete() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
+        fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(self.movieID!)")
+        
+        do {
+            guard let result = try managedContext.fetch(fetchRequest) as? [NSManagedObject] else {return}
+            
+            guard let movie = result.first else {return}
+            managedContext.delete(movie)
+            do {
+                try managedContext.save()
+                print("Movie Deleted")
+            }
+        } catch let error {
+            print(error)
+        }
     }
     
     private func insertImage() {
@@ -136,11 +220,7 @@ class MovieDetailViewController: UIViewController {
             }
         }
     }
-
-
 }
-
-
 
 //MARK: - UICollectionView Delegate & DataSource Methods
 

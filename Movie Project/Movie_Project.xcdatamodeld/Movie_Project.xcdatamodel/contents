@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="22A400" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Movie" representedClassName="Movie" syncable="YES">
+        <attribute name="backDropImage" optional="YES" attributeType="String"/>
+        <attribute name="favoriteState" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
+        <attribute name="movieID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="movieTitle" attributeType="String"/>
+        <attribute name="overView" attributeType="String"/>
+        <attribute name="posterImage" optional="YES" attributeType="String"/>
+        <attribute name="rating" attributeType="Float" defaultValueString="0" usesScalarValueType="NO"/>
+        <attribute name="releaseDate" attributeType="String"/>
+    </entity>
 </model>

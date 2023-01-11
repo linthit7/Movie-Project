@@ -27,9 +27,9 @@ class TabBarViewController: UITabBarController {
         favoriteVC.tabBarItem.image = UIImage(systemName:
             "star.fill")
         
-        popularVC.title = "Popular"
-        lastestVC.title = "Lastest"
-        favoriteVC.title = "Favorite"
+        popularVC.title = "Popular Movies"
+        lastestVC.title = "Upcoming Movies"
+        favoriteVC.title = "Watch List"
         
         tabBar.tintColor = .label
         setViewControllers([popularVC, lastestVC, favoriteVC], animated: true)
