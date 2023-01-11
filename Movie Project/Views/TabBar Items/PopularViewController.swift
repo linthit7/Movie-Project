@@ -72,6 +72,7 @@ class PopularViewController: UIViewController {
             movieDetailVC.movieID = self.popularMovieIDArray[indexPath.row]
             movieDetailVC.genreID = self.popularMovieGenreIDArray[indexPath.row]
             movieDetailVC.posterImage = self.popularMoviePosterArray[indexPath.row]
+            movieDetailVC.getVC = "PopularViewController"
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }

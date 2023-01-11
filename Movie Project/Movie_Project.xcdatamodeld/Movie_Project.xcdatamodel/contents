@@ -3,6 +3,7 @@
     <entity name="Movie" representedClassName="Movie" syncable="YES">
         <attribute name="backDropImage" optional="YES" attributeType="String"/>
         <attribute name="favoriteState" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
+        <attribute name="genreName" optional="YES" attributeType="String"/>
         <attribute name="movieID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="movieTitle" attributeType="String"/>
         <attribute name="overView" attributeType="String"/>

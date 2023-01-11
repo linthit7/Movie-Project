@@ -66,6 +66,8 @@ class SearchResultsViewController: UIViewController {
             movieDetailVC.rating = self.searchMovieRatingArray[indexPath.row]
             movieDetailVC.movieID = self.searchMovieIDArray[indexPath.row]
             movieDetailVC.genreID = self.searchMovieGenreIDArray[indexPath.row]
+            movieDetailVC.posterImage = self.searchMoviePosterArray[indexPath.row]
+            movieDetailVC.getVC = "SearchResultsViewController"
         } 
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }

@@ -21,8 +21,9 @@ class MovieDetailViewController: UIViewController {
     
     @IBOutlet weak var similarMovieCollectionView: UICollectionView!
     
-    var favoriteState: Bool?
+    var getVC: String?
     
+    var favoriteState: Bool?
     var movieTitle: String?
     var overView: String?
     var backDropImage: String?
@@ -33,6 +34,7 @@ class MovieDetailViewController: UIViewController {
     var genreIDArrayCount: Int?
     var genreNameArray: [String] = []
     var posterImage: String?
+    var genreName: String?
     
     var similarMovieTitleArray: [String] = []
     var similarMoviePosterArray: [String] = []
@@ -40,7 +42,7 @@ class MovieDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setUpMovieDetail()
+        setUpMovieDetail(viewController: getVC!)
         navigationController?.navigationBar.prefersLargeTitles = true
         similarMovieCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         similarMovieCollectionView.delegate = self
@@ -104,7 +106,6 @@ class MovieDetailViewController: UIViewController {
     }
     
     private func moviePersist() {
-        
         switch fetchAnObject() {
         case true:
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
@@ -120,6 +121,7 @@ class MovieDetailViewController: UIViewController {
             movie.setValue(rating, forKey: "rating")
             movie.setValue(favoriteState, forKey: "favoriteState")
             movie.setValue(posterImage, forKey: "posterImage")
+            movie.setValue(genreName, forKey: "genreName")
             do {
                 try managedContext.save()
                 print("Data saved")
@@ -160,23 +162,34 @@ class MovieDetailViewController: UIViewController {
     }
     
     private func insertImage() {
-        
         let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(backDropImage!)")
         DispatchQueue.main.async {
             self.movieBackDropImage.sd_setImage(with: backDropImageURL)
         }
     }
     
-    private func setUpMovieDetail() {
-        DispatchQueue.main.async {
-            self.title = self.movieTitle
-            self.insertImage()
-            self.overViewLabel.text = self.overView
-            self.releaseDateLabel.text = "Release Date: \(self.releaseDate!)"
-            self.ratingLabel.text = "Rating: \(self.rating!) / 10"
-            self.similarRequest()
-            self.genreIDArrayConversion(insert: self.genreID!)
-            self.genreLabel.text = "Similar Movies - \(self.genreNameArray.joined(separator: ","))"
+    private func setUpMovieDetail(viewController: String) {
+        if viewController == "WatchlistViewController" {
+            DispatchQueue.main.async {
+                self.title = self.movieTitle
+                self.insertImage()
+                self.overViewLabel.text = self.overView
+                self.releaseDateLabel.text = "Release Date: \(self.releaseDate!)"
+                self.ratingLabel.text = "Rating: \(self.rating!) / 10"
+                self.genreLabel.text = "\(self.genreName!)"
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.title = self.movieTitle
+                self.insertImage()
+                self.overViewLabel.text = self.overView
+                self.releaseDateLabel.text = "Release Date: \(self.releaseDate!)"
+                self.ratingLabel.text = "Rating: \(self.rating!) / 10"
+                self.similarRequest()
+                self.genreIDArrayConversion(insert: self.genreID!)
+                self.genreLabel.text = "Similar Movies - \(self.genreNameArray.joined(separator: ","))"
+                self.genreName = self.genreNameArray.joined(separator: ",")
+            }
         }
     }
     

@@ -21,6 +21,7 @@ class WatchlistViewController: UIViewController {
     var watchListMovieRatingArray: [Float] = []
     var watchListMovieIDArray: [Int] = []
     var watchListMovieFavoriteStateArray: [Bool] = []
+    var watchListGenreNameArray: [String] = []
     
     override func viewWillAppear(_ animated: Bool) {
         view.backgroundColor = .systemBackground
@@ -49,6 +50,7 @@ class WatchlistViewController: UIViewController {
         watchListMovieRatingArray = []
         watchListMovieIDArray = []
         watchListMovieFavoriteStateArray = []
+        watchListGenreNameArray = []
 
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -66,6 +68,7 @@ class WatchlistViewController: UIViewController {
                 watchListMovieOverViewArray.append(data.value(forKey: "overView") as! String)
                 watchListMovieReleaseDateArray.append(data.value(forKey: "releaseDate") as! String)
                 watchListMoviePosterArray.append(data.value(forKey: "posterImage") as! String)
+                watchListGenreNameArray.append(data.value(forKey: "genreName") as! String)
             }
         } catch let error as NSError {
             debugPrint(error)
@@ -85,6 +88,8 @@ class WatchlistViewController: UIViewController {
             movieDetailVC.rating = self.watchListMovieRatingArray[indexPath.row]
             movieDetailVC.movieID = self.watchListMovieIDArray[indexPath.row]
             movieDetailVC.posterImage = self.watchListMoviePosterArray[indexPath.row]
+            movieDetailVC.genreName = self.watchListGenreNameArray[indexPath.row]
+            movieDetailVC.getVC = "WatchlistViewController"
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }

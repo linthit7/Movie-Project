@@ -72,6 +72,7 @@ class UpcomingViewController: UIViewController {
             movieDetailVC.movieID = self.upcomingMovieIDArray[indexPath.row]
             movieDetailVC.genreID = self.upcomingMovieGenreIDArray[indexPath.row]
             movieDetailVC.posterImage = self.upcomingMoviePosterArray[indexPath.row]
+            movieDetailVC.getVC = "UpcomingViewController"
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
