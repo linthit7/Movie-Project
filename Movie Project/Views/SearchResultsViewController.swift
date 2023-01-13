@@ -64,7 +64,6 @@ class SearchResultsViewController: UIViewController {
     
     func searchRequest(queryName: String = "", pagination: Bool = false) {
         let requestQueue = DispatchQueue(label: "searchRequest", qos: .userInitiated)
-        
         if pagination {
             isPaginating = true
         }
@@ -80,8 +79,6 @@ class SearchResultsViewController: UIViewController {
                     print("search movie list count",queryName,searchJSON,self.searchPageCount)
                     if self.searchPageTotal == 0 {
                         self.searchPageTotal = self.searchMovie.total_pages
-                        print(self.searchPageCount)
-                        print(self.searchPageTotal)
                     }
                     DispatchQueue.main.async {
                         self.searchResultsCollectionView.reloadData()

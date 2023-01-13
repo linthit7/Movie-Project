@@ -13,17 +13,19 @@ class PopularViewController: UIViewController {
     
     @IBOutlet weak var popularCollectionView: UICollectionView!
     
+    let request = Request()
     let searchResultsVC = SearchResultsViewController()
-    
-    var popularPageCount: Int = 1
-    var popularPageTotal: Int = 0
-    var isPaginating: Bool = false
-    
-    var popularMovie: OnlineMovie!
     var popularMovieList: [MovieResult] = []
+    var popularMoviePageCount: Int = 1
+    var popularMoviePageTotal: Int = 0
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.request.movieRequest(url: "PopularVC") { movieList, _, total in
+            self.popularMovieList.append(contentsOf: movieList)
+            self.popularMoviePageTotal = total
+            }
         DispatchQueue.main.async {
             self.view.backgroundColor = .systemBackground
             self.title = "Popular Movies"
@@ -32,70 +34,39 @@ class PopularViewController: UIViewController {
             self.popularCollectionView.dataSource = self
             self.popularCollectionView.delegate = self
             self.view.addSubview(self.popularCollectionView)
+            self.popularCollectionView.reloadData()
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        popularCollectionView.frame = view.bounds
-    }
-    
-    private func configureNavItem() {
-        navigationController?.navigationBar.tintColor = .label
-        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
-        navigationItem.rightBarButtonItem = searchItem
-    }
-    
-    @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
-        
-        navigationController?.pushViewController(searchResultsVC, animated: true)
-    }
-    
-    private func movieDetailPassingMethod(for indexPath: IndexPath) {
-        let movieDetailVC = MovieDetailViewController()
-        
-        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-        
-        dataPassingQueue.async {
-            movieDetailVC.movie = self.popularMovieList[indexPath.row]
-            movieDetailVC.vc = "PopularViewController"
-        }
-        navigationController?.pushViewController(movieDetailVC, animated: true)
-    }
-    
-    //MARK: - Network Request Methods
-    
-    private func popularRequest(pagination: Bool = false) {
-        let requestQueue = DispatchQueue(label: "popularRequest", qos: .userInitiated)
-        
-        if pagination {
-            isPaginating = true
-        }
-        let popularURL = "\(Support.baseURL)\(Support.popularMovieEndPoint)?api_key=\(Support.apiKey)&page=\(popularPageCount)"
-        requestQueue.async {
-            Alamofire.request(popularURL, method: .get).responseJSON { response in
-                switch response.result {
-                case .success:
-                    let popularJSON: JSON = JSON(response.result.value!)
-                    self.popularMovie = OnlineMovie.loadJSON(json: popularJSON)
-                    self.popularMovieList.append(contentsOf: self.popularMovie.results)
-                    if self.popularPageTotal == 0 {
-                        self.popularPageTotal = self.popularMovie.total_pages
-                    }
-                    DispatchQueue.main.async {
-                        self.popularCollectionView.reloadData()
-                    }
 
-                case .failure(let error):
-                    print("Error", error)
-                }
-                if pagination {
-                    self.isPaginating = false
-                }
-            }
-        }
+}
+
+override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
+    popularCollectionView.frame = view.bounds
+}
+
+private func configureNavItem() {
+    navigationController?.navigationBar.tintColor = .label
+    let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
+    navigationItem.rightBarButtonItem = searchItem
+}
+
+@objc func searchItemTapped(_ sender: UIBarButtonItem!) {
+    
+    navigationController?.pushViewController(searchResultsVC, animated: true)
+}
+
+private func movieDetailPassingMethod(for indexPath: IndexPath) {
+    let movieDetailVC = MovieDetailViewController()
+    
+    let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+    
+    dataPassingQueue.async {
+        movieDetailVC.movie = self.popularMovieList[indexPath.row]
+        movieDetailVC.vc = "PopularViewController"
     }
+    navigationController?.pushViewController(movieDetailVC, animated: true)
+}
 }
 
 //MARK: - CollectionViewDelegate & DataSource Methods
@@ -136,18 +107,20 @@ extension PopularViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         if position > (popularCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
-            //check if it is paging
-            guard !isPaginating else {
-                return
+            
+            request.movieRequest(url: "PopularVC", pagination: true, pageCount: popularMoviePageCount, pageTotal: popularMoviePageTotal) { movieResult, count, _ in
+                self.popularMovieList.append(contentsOf: movieResult)
+                self.popularMoviePageCount = count
+                
+                DispatchQueue.main.async {
+                    self.popularCollectionView.reloadData()
+                }
             }
-            //fetch more data
-            if popularPageCount < popularPageTotal {
-                self.popularPageCount += 1
-            }
-            self.popularRequest(pagination: true)
         }
     }
 }
+
+
 
 
 
