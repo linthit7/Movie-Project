@@ -12,16 +12,7 @@ class WatchlistViewController: UIViewController {
     
     @IBOutlet weak var watchlistCollectionView: UICollectionView!
     
-    var watchListMovieTitleArray: [String] = []
-    var watchListMoviePosterArray: [String] = []
-    
-    var watchListMovieBackDropArray: [String] = []
-    var watchListMovieOverViewArray: [String] = []
-    var watchListMovieReleaseDateArray: [String] = []
-    var watchListMovieRatingArray: [Float] = []
-    var watchListMovieIDArray: [Int] = []
-    var watchListMovieFavoriteStateArray: [Bool] = []
-    var watchListGenreNameArray: [String] = []
+    var watchList: [NSManagedObject] = []
     
     override func viewWillAppear(_ animated: Bool) {
         view.backgroundColor = .systemBackground
@@ -41,17 +32,7 @@ class WatchlistViewController: UIViewController {
     }
     
     private func movieFetch() {
-        
-        watchListMovieTitleArray = []
-        watchListMoviePosterArray = []
-        watchListMovieBackDropArray = []
-        watchListMovieOverViewArray = []
-        watchListMovieReleaseDateArray = []
-        watchListMovieRatingArray = []
-        watchListMovieIDArray = []
-        watchListMovieFavoriteStateArray = []
-        watchListGenreNameArray = []
-
+        watchList = []
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
         let managedContext = appDelegate.persistentContainer.viewContext
         let  fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
@@ -59,17 +40,8 @@ class WatchlistViewController: UIViewController {
         do {
             guard let result = try managedContext.fetch(fetchRequest) as? [NSManagedObject] else { return }
             
-            for data in result {
-                watchListMovieFavoriteStateArray.append(data.value(forKey: "favoriteState") as! Bool)
-                watchListMovieIDArray.append(data.value(forKey: "movieID") as! Int)
-                watchListMovieRatingArray.append(data.value(forKey: "rating") as! Float)
-                watchListMovieBackDropArray.append(data.value(forKey: "backDropImage") as! String)
-                watchListMovieTitleArray.append(data.value(forKey: "movieTitle") as! String)
-                watchListMovieOverViewArray.append(data.value(forKey: "overView") as! String)
-                watchListMovieReleaseDateArray.append(data.value(forKey: "releaseDate") as! String)
-                watchListMoviePosterArray.append(data.value(forKey: "posterImage") as! String)
-                watchListGenreNameArray.append(data.value(forKey: "genreName") as! String)
-            }
+            self.watchList = result
+            
         } catch let error as NSError {
             debugPrint(error)
         }
@@ -81,15 +53,8 @@ class WatchlistViewController: UIViewController {
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.movieTitle = self.watchListMovieTitleArray[indexPath.row]
-            movieDetailVC.backDropImage = self.watchListMovieBackDropArray[indexPath.row]
-            movieDetailVC.overView = self.watchListMovieOverViewArray[indexPath.row]
-            movieDetailVC.releaseDate = self.watchListMovieReleaseDateArray[indexPath.row]
-            movieDetailVC.rating = self.watchListMovieRatingArray[indexPath.row]
-            movieDetailVC.movieID = self.watchListMovieIDArray[indexPath.row]
-            movieDetailVC.posterImage = self.watchListMoviePosterArray[indexPath.row]
-            movieDetailVC.genreName = self.watchListGenreNameArray[indexPath.row]
-            movieDetailVC.getVC = "WatchlistViewController"
+            movieDetailVC.watchListMovie = self.watchList[indexPath.row]
+            movieDetailVC.vc = "WatchlistViewController"
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
@@ -101,15 +66,15 @@ class WatchlistViewController: UIViewController {
 extension WatchlistViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return watchListMovieTitleArray.count
+        return watchList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: watchListMovieTitleArray[indexPath.row])
-        cell.insertImage(with: watchListMoviePosterArray[indexPath.row])
+        cell.insertTitle(with: watchList[indexPath.row].value(forKey: "movieTitle") as! String)
+        cell.insertImage(with: watchList[indexPath.row].value(forKey: "posterImage") as! String)
         return cell
     }
     

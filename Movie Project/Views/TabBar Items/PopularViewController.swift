@@ -14,31 +14,25 @@ class PopularViewController: UIViewController {
     @IBOutlet weak var popularCollectionView: UICollectionView!
     
     let searchResultsVC = SearchResultsViewController()
-
-    var popularMovieTitleArray: [String] = []
-    var popularMoviePosterArray: [String] = []
+    
     var popularPageCount: Int = 1
     var popularPageTotal: Int = 0
     var isPaginating: Bool = false
     
-    var popularMovieBackDropArray: [String] = []
-    var popularMovieOverViewArray: [String] = []
-    var popularMovieReleaseDateArray: [String] = []
-    var popularMovieRatingArray: [Float] = []
-    var popularMovieIDArray: [Int] = []
-    var popularMovieGenreIDArray: [Any] = []
- 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .systemBackground
-        title = "Popular Movies"
+    var popularMovie: OnlineMovie!
+    var popularMovieList: [MovieResult] = []
     
-        popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-        popularCollectionView.dataSource = self
-        popularCollectionView.delegate = self
-        view.addSubview(popularCollectionView)
-        configureNavItem()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DispatchQueue.main.async {
+            self.view.backgroundColor = .systemBackground
+            self.title = "Popular Movies"
+            self.configureNavItem()
+            self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+            self.popularCollectionView.dataSource = self
+            self.popularCollectionView.delegate = self
+            self.view.addSubview(self.popularCollectionView)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -64,15 +58,8 @@ class PopularViewController: UIViewController {
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.movieTitle = self.popularMovieTitleArray[indexPath.row]
-            movieDetailVC.backDropImage = self.popularMovieBackDropArray[indexPath.row]
-            movieDetailVC.overView = self.popularMovieOverViewArray[indexPath.row]
-            movieDetailVC.releaseDate = self.popularMovieReleaseDateArray[indexPath.row]
-            movieDetailVC.rating = self.popularMovieRatingArray[indexPath.row]
-            movieDetailVC.movieID = self.popularMovieIDArray[indexPath.row]
-            movieDetailVC.genreID = self.popularMovieGenreIDArray[indexPath.row]
-            movieDetailVC.posterImage = self.popularMoviePosterArray[indexPath.row]
-            movieDetailVC.getVC = "PopularViewController"
+            movieDetailVC.movie = self.popularMovieList[indexPath.row]
+            movieDetailVC.vc = "PopularViewController"
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
@@ -90,35 +77,18 @@ class PopularViewController: UIViewController {
             Alamofire.request(popularURL, method: .get).responseJSON { response in
                 switch response.result {
                 case .success:
-                    
                     let popularJSON: JSON = JSON(response.result.value!)
-                    let popularArrayCount = popularJSON["results"].array?.count ?? 0
-                    self.popularPageTotal = popularJSON["total_pages"].intValue
-
-                    for p in 0..<popularArrayCount {
-                        
-                        let title = popularJSON["results"][p]["title"].stringValue
-                        let posterImage = popularJSON["results"][p]["poster_path"].stringValue
-                        let backDropImage = popularJSON["results"][p]["backdrop_path"].stringValue
-                        let overView = popularJSON["results"][p]["overview"].stringValue
-                        let releaseDate = popularJSON["results"][p]["release_date"].stringValue
-                        let rating = popularJSON["results"][p]["vote_average"].floatValue
-                        let movieID = popularJSON["results"][p]["id"].intValue
-                        let genreID = popularJSON["results"][p]["genre_ids"].arrayValue
-                        
-                        self.popularMovieTitleArray.append(title)
-                        self.popularMoviePosterArray.append(posterImage)
-                        self.popularMovieBackDropArray.append(backDropImage)
-                        self.popularMovieOverViewArray.append(overView)
-                        self.popularMovieReleaseDateArray.append(releaseDate)
-                        self.popularMovieRatingArray.append(rating)
-                        self.popularMovieIDArray.append(movieID)
-                        self.popularMovieGenreIDArray.append(genreID)
-
+                    self.popularMovie = OnlineMovie.loadJSON(json: popularJSON)
+                    self.popularMovieList.append(contentsOf: self.popularMovie.results)
+                    if self.popularPageTotal == 0 {
+                        self.popularPageTotal = self.popularMovie.total_pages
+                    }
+                    DispatchQueue.main.async {
                         self.popularCollectionView.reloadData()
                     }
+
                 case .failure(let error):
-                    print(error)
+                    print("Error", error)
                 }
                 if pagination {
                     self.isPaginating = false
@@ -132,15 +102,15 @@ class PopularViewController: UIViewController {
 
 extension PopularViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return popularMovieTitleArray.count
+        return popularMovieList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: popularMovieTitleArray[indexPath.row])
-        cell.insertImage(with: popularMoviePosterArray[indexPath.row])
+        cell.insertTitle(with:  (popularMovieList[indexPath.row].title))
+        cell.insertImage(with: (popularMovieList[indexPath.row].poster_path))
         return cell
     }
     

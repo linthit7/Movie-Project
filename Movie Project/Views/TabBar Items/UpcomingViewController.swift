@@ -15,21 +15,16 @@ class UpcomingViewController: UIViewController {
     
     let searchResultsVC = SearchResultsViewController()
     
-    var upcomingMovieTitleArray: [String] = []
-    var upcomingMoviePosterArray: [String] = []
+    
     var upcomingPageCount: Int = 1
     var upcomingPageTotal: Int = 0
     var isPaginating: Bool = false
     
-    var upcomingMovieBackDropArray: [String] = []
-    var upcomingMovieOverViewArray: [String] = []
-    var upcomingMovieReleaseDateArray: [String] = []
-    var upcomingMovieRatingArray: [Float] = []
-    var upcomingMovieIDArray: [Int] = []
-    var upcomingMovieGenreIDArray: [Any] = []
+    var upcomingMovie: OnlineMovie!
+    var upcomingMovieList: [MovieResult] = []
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         view.backgroundColor = .systemBackground
         title = "Upcoming Movies"
@@ -64,15 +59,8 @@ class UpcomingViewController: UIViewController {
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.movieTitle = self.upcomingMovieTitleArray[indexPath.row]
-            movieDetailVC.backDropImage = self.upcomingMovieBackDropArray[indexPath.row]
-            movieDetailVC.overView = self.upcomingMovieOverViewArray[indexPath.row]
-            movieDetailVC.releaseDate = self.upcomingMovieReleaseDateArray[indexPath.row]
-            movieDetailVC.rating = self.upcomingMovieRatingArray[indexPath.row]
-            movieDetailVC.movieID = self.upcomingMovieIDArray[indexPath.row]
-            movieDetailVC.genreID = self.upcomingMovieGenreIDArray[indexPath.row]
-            movieDetailVC.posterImage = self.upcomingMoviePosterArray[indexPath.row]
-            movieDetailVC.getVC = "UpcomingViewController"
+            movieDetailVC.movie = self.upcomingMovieList[indexPath.row]
+            movieDetailVC.vc = "UpcomingViewController"
         }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
@@ -91,32 +79,16 @@ class UpcomingViewController: UIViewController {
                 switch response.result {
                 case .success:
                     let upcomingJSON: JSON = JSON(response.result.value!)
-                    let upcomingArrayCount = upcomingJSON["results"].array?.count ?? 0
-                    self.upcomingPageTotal = upcomingJSON["total_pages"].intValue
+                    self.upcomingMovie = OnlineMovie.loadJSON(json: upcomingJSON)
+                    self.upcomingMovieList.append(contentsOf: self.upcomingMovie.results)
                     
-                    for u in 0..<upcomingArrayCount {
-                        
-                        let title = upcomingJSON["results"][u]["title"].stringValue
-                        let posterImage = upcomingJSON["results"][u]["poster_path"].stringValue
-                        let backDropImage = upcomingJSON["results"][u]["backdrop_path"].stringValue
-                        let overView = upcomingJSON["results"][u]["overview"].stringValue
-                        let releaseDate = upcomingJSON["results"][u]["release_date"].stringValue
-                        let rating = upcomingJSON["results"][u]["vote_average"].floatValue
-                        let movieID = upcomingJSON["results"][u]["id"].intValue
-                        let genreID = upcomingJSON["results"][u]["genre_ids"].arrayValue
-                        
-                        
-                        self.upcomingMovieTitleArray.append(title)
-                        self.upcomingMoviePosterArray.append(posterImage)
-                        self.upcomingMovieBackDropArray.append(backDropImage)
-                        self.upcomingMovieOverViewArray.append(overView)
-                        self.upcomingMovieReleaseDateArray.append(releaseDate)
-                        self.upcomingMovieRatingArray.append(rating)
-                        self.upcomingMovieIDArray.append(movieID)
-                        self.upcomingMovieGenreIDArray.append(genreID)
-                        
+                    if self.upcomingPageTotal == 0 {
+                        self.upcomingPageTotal = self.upcomingMovie.total_pages
+                    }
+                    DispatchQueue.main.async {
                         self.upcomingCollectionView.reloadData()
                     }
+                    
                 case .failure(let error):
                     print(error)
                 }
@@ -132,7 +104,7 @@ class UpcomingViewController: UIViewController {
 
 extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return upcomingMovieTitleArray.count
+        return upcomingMovieList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -140,8 +112,8 @@ extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDe
                 as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: upcomingMovieTitleArray[indexPath.row])
-        cell.insertImage(with: upcomingMoviePosterArray[indexPath.row])
+        cell.insertTitle(with: upcomingMovieList[indexPath.row].title)
+        cell.insertImage(with: upcomingMovieList[indexPath.row].poster_path)
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
