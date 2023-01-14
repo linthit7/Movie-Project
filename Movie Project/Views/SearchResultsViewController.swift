@@ -15,32 +15,25 @@ class SearchResultsViewController: UIViewController {
     
     @IBOutlet weak var searchResultsCollectionView: UICollectionView!
     
-    var searchMovie: OnlineMovie!
-    var searchMovieList: [MovieResult] = []
-    
+    let request = Request()
     var searchPageCount: Int = 1
     var searchPageTotal: Int = 0
-    var isPaginating: Bool = false
+    var searchMovieList: [MovieResult] = []
     var queryName: String = ""
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setupSearchController()
+        DispatchQueue.main.async {
+            self.setupSearchController()
+            self.navigationController?.navigationBar.tintColor = .label
+            self.searchResultsCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+            self.searchResultsCollectionView.delegate = self
+            self.searchResultsCollectionView.dataSource = self
+            self.view.addSubview(self.searchResultsCollectionView)
+        }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        searchController.searchBar.showsCancelButton = false
-        navigationController?.navigationBar.tintColor = .label
-        searchResultsCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-        searchResultsCollectionView.delegate = self
-        searchResultsCollectionView.dataSource = self
-        view.addSubview(searchResultsCollectionView)
-        
-        
-    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -56,49 +49,19 @@ class SearchResultsViewController: UIViewController {
         dataPassingQueue.async {
             movieDetailVC.movie = self.searchMovieList[indexPath.row]
             movieDetailVC.vc = "SearchResultsViewController"
-        } 
+        }
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
-
-    //MARK: - Network Request Methods
     
-    func searchRequest(queryName: String = "", pagination: Bool = false) {
-        let requestQueue = DispatchQueue(label: "searchRequest", qos: .userInitiated)
-        if pagination {
-            isPaginating = true
-        }
-        let searchURL = "\(Support.baseURL)\(Support.searchMovieEndPoint)?api_key=\(Support.apiKey)&page=\(searchPageCount)&query=\(queryName)"
-        requestQueue.async {
-            Alamofire.request(searchURL, method: .get).responseJSON { response in
-                switch response.result {
-                case .success:
-                    
-                    let searchJSON: JSON = JSON(response.result.value!)
-                    self.searchMovie = OnlineMovie.loadJSON(json: searchJSON)
-                    self.searchMovieList.append(contentsOf: self.searchMovie.results)
-                    print("search movie list count",queryName,searchJSON,self.searchPageCount)
-                    if self.searchPageTotal == 0 {
-                        self.searchPageTotal = self.searchMovie.total_pages
-                    }
-                    DispatchQueue.main.async {
-                        self.searchResultsCollectionView.reloadData()
-                    }
-                case.failure(let error):
-                    print(error)
-                }
-                if pagination {
-                    self.isPaginating = false
-                }
-            }
-        }
-    }
     private func resetTempData() {
         searchPageCount = 1
         searchPageTotal = 0
-        isPaginating = false
         queryName = ""
         searchMovieList = []
-        searchResultsCollectionView.reloadData()
+        DispatchQueue.main.async {
+            self.searchResultsCollectionView.reloadData()
+        }
+        
     }
 }
 
@@ -107,10 +70,14 @@ class SearchResultsViewController: UIViewController {
 extension SearchResultsViewController: UISearchBarDelegate {
     
     private func setupSearchController() {
-           navigationItem.searchController = searchController
-           searchController.searchBar.delegate = self
-           navigationItem.hidesSearchBarWhenScrolling = false
-       }
+        navigationItem.searchController = searchController
+        searchController.searchBar.delegate = self
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.isActive = true
+        searchController.searchBar.becomeFirstResponder()
+        print(searchController.searchBar.isFirstResponder)
+        searchController.searchBar.showsCancelButton = false
+    }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchController.searchBar.showsCancelButton = true
@@ -122,7 +89,15 @@ extension SearchResultsViewController: UISearchBarDelegate {
             return
         }
         queryName = text
-        self.searchRequest(queryName: text)
+        request.movieRequest(url: "SearchResultsVC", queryName: text) { movieResult, _, total in
+            self.searchMovieList = movieResult
+            self.searchPageTotal = total
+            
+            DispatchQueue.main.async {
+                self.searchResultsCollectionView.reloadData()
+            }
+        }
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -174,20 +149,19 @@ extension SearchResultsViewController: UICollectionViewDelegateFlowLayout {
 //MARK: - UIScrollViewDelegate Methods
 
 extension SearchResultsViewController: UIScrollViewDelegate {
-
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         if position > (searchResultsCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
-            //check if it is paging
-            guard !isPaginating else {
-                return
-            }
-            //fetch more data
-            if searchPageCount < searchPageTotal {
-                self.searchPageCount += 1
-                self.searchRequest(queryName: self.queryName, pagination: true)
-            }
             
+            request.movieRequest(url: "SearchResultsVC", queryName: queryName, pagination: true, pageCount: searchPageCount, pageTotal: searchPageTotal) { movieResult, count, _ in
+                self.searchMovieList.append(contentsOf: movieResult)
+                self.searchPageCount = count
+                
+                DispatchQueue.main.async {
+                    self.searchResultsCollectionView.reloadData()
+                }
+            }
         }
     }
 }

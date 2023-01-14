@@ -22,51 +22,56 @@ class PopularViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        title = "Popular Movies"
+        
         self.request.movieRequest(url: "PopularVC") { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
             self.popularMoviePageTotal = total
+            
+            DispatchQueue.main.async {
+                self.popularCollectionView.reloadData()
             }
+        }
+        
         DispatchQueue.main.async {
-            self.view.backgroundColor = .systemBackground
-            self.title = "Popular Movies"
             self.configureNavItem()
             self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.popularCollectionView.dataSource = self
             self.popularCollectionView.delegate = self
             self.view.addSubview(self.popularCollectionView)
-            self.popularCollectionView.reloadData()
+            
         }
-
-}
-
-override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    
-    popularCollectionView.frame = view.bounds
-}
-
-private func configureNavItem() {
-    navigationController?.navigationBar.tintColor = .label
-    let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
-    navigationItem.rightBarButtonItem = searchItem
-}
-
-@objc func searchItemTapped(_ sender: UIBarButtonItem!) {
-    
-    navigationController?.pushViewController(searchResultsVC, animated: true)
-}
-
-private func movieDetailPassingMethod(for indexPath: IndexPath) {
-    let movieDetailVC = MovieDetailViewController()
-    
-    let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-    
-    dataPassingQueue.async {
-        movieDetailVC.movie = self.popularMovieList[indexPath.row]
-        movieDetailVC.vc = "PopularViewController"
+        
     }
-    navigationController?.pushViewController(movieDetailVC, animated: true)
-}
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        popularCollectionView.frame = view.bounds
+    }
+    
+    private func configureNavItem() {
+        navigationController?.navigationBar.tintColor = .label
+        let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
+        navigationItem.rightBarButtonItem = searchItem
+    }
+    
+    @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
+        
+        navigationController?.pushViewController(searchResultsVC, animated: true)
+    }
+    
+    private func movieDetailPassingMethod(for indexPath: IndexPath) {
+        let movieDetailVC = MovieDetailViewController()
+        
+        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+        
+        dataPassingQueue.async {
+            movieDetailVC.movie = self.popularMovieList[indexPath.row]
+            movieDetailVC.vc = "PopularViewController"
+        }
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
 }
 
 //MARK: - CollectionViewDelegate & DataSource Methods

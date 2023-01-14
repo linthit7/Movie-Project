@@ -39,9 +39,7 @@ class WatchlistViewController: UIViewController {
         
         do {
             guard let result = try managedContext.fetch(fetchRequest) as? [NSManagedObject] else { return }
-            
             self.watchList = result
-            
         } catch let error as NSError {
             debugPrint(error)
         }

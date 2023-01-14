@@ -21,6 +21,9 @@ class MovieDetailViewController: UIViewController {
     
     @IBOutlet weak var similarMovieCollectionView: UICollectionView!
     
+    let request = Request()
+    let cRUD = CRUD()
+    
     var vc: String!
     
     var movieDetail: OnlineMovie!
@@ -57,6 +60,12 @@ class MovieDetailViewController: UIViewController {
         
     }
     
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        setUpMovieDetail(viewController: vc)
+//        print("View did appear", movieDetailList.count)
+//    }
     private func configureNavItem() {
         navigationController?.navigationBar.tintColor = .label
         
@@ -105,7 +114,7 @@ class MovieDetailViewController: UIViewController {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return nil}
         let managedContext = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
-            fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(movie.id!)")
+        fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(movie.id!)")
         do {
             let object = try managedContext.fetch(fetchRequest)
             if object.isEmpty {return true} else {return false}
@@ -156,16 +165,16 @@ class MovieDetailViewController: UIViewController {
                 guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
                 let managedContext = appDelegate.persistentContainer.viewContext
                 guard let movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext) else {return}
-                    let nsMovie = NSManagedObject(entity: movieEntity, insertInto: managedContext)
-                    nsMovie.setValue(movie.id, forKey: "movieID")
-                    nsMovie.setValue(movie.title, forKey: "movieTitle")
-                    nsMovie.setValue(movie.backdrop_path, forKey: "backDropImage")
-                    nsMovie.setValue(movie.overview, forKey: "overView")
-                    nsMovie.setValue(movie.release_date, forKey: "releaseDate")
-                    nsMovie.setValue(movie.vote_average, forKey: "rating")
-                    nsMovie.setValue(favoriteState, forKey: "favoriteState")
-                    nsMovie.setValue(movie.poster_path, forKey: "posterImage")
-                    nsMovie.setValue(genreName, forKey: "genreName")
+                let nsMovie = NSManagedObject(entity: movieEntity, insertInto: managedContext)
+                nsMovie.setValue(movie.id, forKey: "movieID")
+                nsMovie.setValue(movie.title, forKey: "movieTitle")
+                nsMovie.setValue(movie.backdrop_path, forKey: "backDropImage")
+                nsMovie.setValue(movie.overview, forKey: "overView")
+                nsMovie.setValue(movie.release_date, forKey: "releaseDate")
+                nsMovie.setValue(movie.vote_average, forKey: "rating")
+                nsMovie.setValue(favoriteState, forKey: "favoriteState")
+                nsMovie.setValue(movie.poster_path, forKey: "posterImage")
+                nsMovie.setValue(genreName, forKey: "genreName")
                 do {
                     try managedContext.save()
                 } catch let error {
@@ -184,29 +193,13 @@ class MovieDetailViewController: UIViewController {
     }
     
     private func movieDelete(viewController: String) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
-        fetchRequest.fetchLimit = 1
-        
         if viewController == "WatchlistViewController" {
-            fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(tempID!)")
+            cRUD.delete(id: tempID!)
         } else {
-            fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(self.movie.id!)")
-        }
-        do {
-            guard let result = try managedContext.fetch(fetchRequest) as? [NSManagedObject] else {return}
-            
-            guard let movie = result.first else {return}
-            managedContext.delete(movie)
-            do {
-                try managedContext.save()
-            }
-        } catch let error {
-            print(error)
+            cRUD.delete(id: movie.id!)
         }
     }
-    
+
     private func insertImage(viewController: String) {
         
         if viewController == "WatchlistViewController" {
@@ -216,12 +209,12 @@ class MovieDetailViewController: UIViewController {
             }
         }
         else {
-                let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(movie.backdrop_path!)")
-                DispatchQueue.main.async {
-                    self.movieBackDropImage.sd_setImage(with: backDropImageURL)
-                }
+            let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(movie.backdrop_path!)")
+            DispatchQueue.main.async {
+                self.movieBackDropImage.sd_setImage(with: backDropImageURL)
             }
         }
+    }
     
     private func setUpMovieDetail(viewController: String) {
         if viewController == "WatchlistViewController" {
@@ -235,13 +228,18 @@ class MovieDetailViewController: UIViewController {
                 self.genreLabel.text = "\(self.watchListMovie.value(forKey: "genreName")!)"
             }
         } else {
+            request.movieRequest(url: "SimilarVC", id: movie.id!) { movieResult, _, _ in
+                self.movieDetailList.append(contentsOf: movieResult)
+                DispatchQueue.main.async {
+                    self.similarMovieCollectionView.reloadData()
+                }
+            }
             DispatchQueue.main.async {
                 self.title = self.movie.title
                 self.insertImage(viewController: viewController)
                 self.overViewLabel.text = self.movie.overview
                 self.releaseDateLabel.text = "Release Date: \(self.movie.release_date!)"
                 self.ratingLabel.text = "Rating: \(self.movie.vote_average!) / 10"
-                self.similarRequest()
                 self.genreIDArrayConversion(insert: self.movie.genre_ids)
                 self.genreLabel.text = "Similar Movies - \(self.genreNameArray.joined(separator: ","))"
                 self.genreName = self.genreNameArray.joined(separator: ",")
@@ -253,30 +251,6 @@ class MovieDetailViewController: UIViewController {
         for g in 0..<intArray.count {
             let genreInt: Int = intArray[g].rawValue as! Int
             genreNameArray.append(Genre(genreID: genreInt).genreName)
-        }
-    }
-    
-    //MARK: - Network Request Methods
-    
-    private func similarRequest() {
-        let requestQueue = DispatchQueue(label: "similarRequest", qos: .userInitiated)
-        
-        let similarURL = "\(Support.baseURL)/movie/\(movie.id!)/similar?api_key=\(Support.apiKey)"
-        requestQueue.async {
-            Alamofire.request(similarURL, method: .get).responseJSON { response in
-                switch response.result {
-                case .success:
-                    let similarJSON: JSON = JSON(response.result.value!)
-                    self.movieDetail = OnlineMovie.loadJSON(json: similarJSON)
-                    self.movieDetailList = self.movieDetail.results
-                    
-                    DispatchQueue.main.async {
-                        self.similarMovieCollectionView.reloadData()
-                    }
-                case .failure(let error):
-                    print(error)
-                }
-            }
         }
     }
 }
