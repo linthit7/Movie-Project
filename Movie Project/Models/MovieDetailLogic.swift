@@ -9,9 +9,9 @@ import Foundation
 import CoreData
 import UIKit
 
-class CRUD {
+class MovieDetailLogic {
     
-    func delete(id: Int) {
+    static func delete(id: Int) {
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -29,6 +29,13 @@ class CRUD {
             }
         } catch let error {
             print(error)
+        }
+    }
+    
+    static func tempData(viewController: String, movieObject: NSManagedObject, completion: @escaping (NSManagedObject) -> Void) {
+        if viewController == "WatchlistViewController" {
+            let tempObject = movieObject
+        completion(tempObject)
         }
     }
 }

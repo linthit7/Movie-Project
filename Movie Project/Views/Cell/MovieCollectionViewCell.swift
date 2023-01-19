@@ -19,6 +19,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        movieImage.layer.cornerCurve = .continuous
+        movieImage.layer.cornerRadius = 22
+        
     }
     
     func insertTitle(with title: String) {
@@ -30,6 +34,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     func insertImage(with image: String) {
         let posterImageURL = URL(string: "\(Support.posterImageURL)\(image)")
         DispatchQueue.main.async {
+            
             self.movieImage.sd_setImage(with: posterImageURL)
         }
     }

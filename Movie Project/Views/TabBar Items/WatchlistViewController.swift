@@ -15,14 +15,17 @@ class WatchlistViewController: UIViewController {
     var watchList: [NSManagedObject] = []
     
     override func viewWillAppear(_ animated: Bool) {
-        view.backgroundColor = .systemBackground
-        title = "Watch List"
+        DispatchQueue.main.async {
+            self.title = "Watch List"
+            
+            self.watchlistCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+            self.watchlistCollectionView.delegate = self
+            self.watchlistCollectionView.dataSource = self
+            self.watchlistCollectionView.collectionViewLayout = self.configureLayout()
+            self.movieFetch()
+            self.watchlistCollectionView.reloadData()
+        }
         
-        watchlistCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-        watchlistCollectionView.delegate = self
-        watchlistCollectionView.dataSource = self
-        movieFetch()
-        watchlistCollectionView.reloadData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -83,10 +86,19 @@ extension WatchlistViewController: UICollectionViewDataSource, UICollectionViewD
 
 //MARK: - UICollectionViewDelegateFlowLayout Methods
 
-extension WatchlistViewController: UICollectionViewDelegateFlowLayout {
+extension WatchlistViewController {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/3.5, height: collectionView.frame.height/4)
+    func configureLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20.00, bottom: 0, trailing: 0)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.45))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return UICollectionViewCompositionalLayout(section: section)
     }
 }
 

@@ -22,7 +22,7 @@ class MovieDetailViewController: UIViewController {
     @IBOutlet weak var similarMovieCollectionView: UICollectionView!
     
     let request = Request()
-    let cRUD = CRUD()
+//    let cRUD = CRUD()
     
     var vc: String!
     
@@ -34,6 +34,8 @@ class MovieDetailViewController: UIViewController {
     var genreName: String?
     var watchListMovie: NSManagedObject!
     var currentMovieID: Int = 0
+    
+    var tempMovie: NSManagedObject!
     
     var tempID: Int!
     var tempTitle: String!
@@ -56,16 +58,27 @@ class MovieDetailViewController: UIViewController {
         view.addSubview(similarMovieCollectionView)
         checkFavoriteState(viewController: vc)
         configureNavItem()
-        tempData(viewController: vc)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if watchListMovie != nil {
+            MovieDetailLogic.tempData(viewController: vc, movieObject: watchListMovie) { tempObject in
+                self.tempID = tempObject.value(forKey: "movieID") as? Int
+                self.tempTitle = tempObject.value(forKey: "movieTitle") as? String
+                self.tempBackDrop = tempObject.value(forKey: "backDropImage") as? String
+                self.tempOverview = tempObject.value(forKey: "overView") as? String
+                self.tempReleaseDate = tempObject.value(forKey: "releaseDate") as? String
+                self.tempRating = tempObject.value(forKey: "rating") as? Float
+                self.tempState = tempObject.value(forKey: "favoriteState") as? Bool
+                self.tempPoster = tempObject.value(forKey: "posterImage") as? String
+                self.tempGenre = tempObject.value(forKey: "genreName") as? String
+            }
+        }
         
     }
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        setUpMovieDetail(viewController: vc)
-//        print("View did appear", movieDetailList.count)
-//    }
     private func configureNavItem() {
         navigationController?.navigationBar.tintColor = .label
         
@@ -124,19 +137,19 @@ class MovieDetailViewController: UIViewController {
         return nil
     }
     
-    private func tempData(viewController: String) {
-        if viewController == "WatchlistViewController" {
-            tempID = watchListMovie.value(forKey: "movieID") as? Int
-            tempTitle = watchListMovie.value(forKey: "movieTitle") as? String
-            tempBackDrop = watchListMovie.value(forKey: "backDropImage") as? String
-            tempOverview = watchListMovie.value(forKey: "overView") as? String
-            tempReleaseDate = watchListMovie.value(forKey: "releaseDate") as? String
-            tempRating = watchListMovie.value(forKey: "rating") as? Float
-            tempState = watchListMovie.value(forKey: "favoriteState") as? Bool
-            tempPoster = watchListMovie.value(forKey: "posterImage") as? String
-            tempGenre = watchListMovie.value(forKey: "genreName") as? String
-        }
-    }
+//    private func tempData(viewController: String) {
+//        if viewController == "WatchlistViewController" {
+//            tempID = watchListMovie.value(forKey: "movieID") as? Int
+//            tempTitle = watchListMovie.value(forKey: "movieTitle") as? String
+//            tempBackDrop = watchListMovie.value(forKey: "backDropImage") as? String
+//            tempOverview = watchListMovie.value(forKey: "overView") as? String
+//            tempReleaseDate = watchListMovie.value(forKey: "releaseDate") as? String
+//            tempRating = watchListMovie.value(forKey: "rating") as? Float
+//            tempState = watchListMovie.value(forKey: "favoriteState") as? Bool
+//            tempPoster = watchListMovie.value(forKey: "posterImage") as? String
+//            tempGenre = watchListMovie.value(forKey: "genreName") as? String
+//        }
+//    }
     
     private func moviePersist(viewController: String) {
         
@@ -145,6 +158,7 @@ class MovieDetailViewController: UIViewController {
             let managedContext = appDelegate.persistentContainer.viewContext
             guard let movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext) else {return}
             let nsMovie = NSManagedObject(entity: movieEntity, insertInto: managedContext)
+            
             nsMovie.setValue(tempID, forKey: "movieID")
             nsMovie.setValue(tempTitle, forKey: "movieTitle")
             nsMovie.setValue(tempBackDrop, forKey: "backDropImage")
@@ -194,9 +208,9 @@ class MovieDetailViewController: UIViewController {
     
     private func movieDelete(viewController: String) {
         if viewController == "WatchlistViewController" {
-            cRUD.delete(id: tempID!)
+            MovieDetailLogic.delete(id: tempID!)
         } else {
-            cRUD.delete(id: movie.id!)
+            MovieDetailLogic.delete(id: movie.id!)
         }
     }
 

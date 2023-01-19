@@ -22,7 +22,7 @@ class PopularViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        title = "Popular Movies"
+        
         
         self.request.movieRequest(url: "PopularVC") { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
@@ -34,10 +34,12 @@ class PopularViewController: UIViewController {
         }
         
         DispatchQueue.main.async {
+            self.title = "Popular Movies"
             self.configureNavItem()
             self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.popularCollectionView.dataSource = self
             self.popularCollectionView.delegate = self
+            self.popularCollectionView.collectionViewLayout = self.configureLayout()
             self.view.addSubview(self.popularCollectionView)
             
         }
@@ -46,6 +48,7 @@ class PopularViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         
         popularCollectionView.frame = view.bounds
     }
@@ -97,11 +100,19 @@ extension PopularViewController: UICollectionViewDelegate, UICollectionViewDataS
 
 //MARK: - Collection View DelegateFlowLayout Methods
 
-extension PopularViewController: UICollectionViewDelegateFlowLayout {
+extension PopularViewController {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func configureLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20.00, bottom: 0, trailing: 0)
         
-        return CGSize(width: collectionView.frame.size.width/3.5, height: collectionView.frame.size.height/4)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.45))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return UICollectionViewCompositionalLayout(section: section)
     }
 }
 

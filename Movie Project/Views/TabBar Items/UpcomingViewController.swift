@@ -37,6 +37,7 @@ class UpcomingViewController: UIViewController {
             self.upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.upcomingCollectionView.delegate = self
             self.upcomingCollectionView.dataSource = self
+            self.upcomingCollectionView.collectionViewLayout = self.configureLayout()
             self.view.addSubview(self.upcomingCollectionView)
         }
         
@@ -95,11 +96,19 @@ extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDe
 
 //MARK: - UICollectionViewDelegateFlowLayout Methods
 
-extension UpcomingViewController:  UICollectionViewDelegateFlowLayout {
+extension UpcomingViewController {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func configureLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20.00, bottom: 0, trailing: 0)
         
-        return CGSize(width: collectionView.frame.width/3.5, height: collectionView.frame.height/4)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.45))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return UICollectionViewCompositionalLayout(section: section)
     }
 }
 

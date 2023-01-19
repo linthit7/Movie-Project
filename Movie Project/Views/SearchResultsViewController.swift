@@ -67,16 +67,13 @@ class SearchResultsViewController: UIViewController {
 
 //MARK: - UISearchBar Delegate Methods
 
-extension SearchResultsViewController: UISearchBarDelegate {
+extension SearchResultsViewController: UISearchBarDelegate, UITextFieldDelegate {
     
     private func setupSearchController() {
         navigationItem.searchController = searchController
         searchController.searchBar.delegate = self
         navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.isActive = true
-        searchController.searchBar.becomeFirstResponder()
-        print(searchController.searchBar.isFirstResponder)
-        searchController.searchBar.showsCancelButton = false
+        
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -97,7 +94,6 @@ extension SearchResultsViewController: UISearchBarDelegate {
                 self.searchResultsCollectionView.reloadData()
             }
         }
-        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
