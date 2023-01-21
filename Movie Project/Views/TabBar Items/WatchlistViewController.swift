@@ -25,6 +25,7 @@ class WatchlistViewController: UIViewController {
             self.movieFetch()
             self.watchlistCollectionView.reloadData()
         }
+        print("printed from WatchlistViewController")
         
     }
     

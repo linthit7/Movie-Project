@@ -22,15 +22,11 @@ class PopularViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        
+        print("View Will Appear PopularViewController")
         
         self.request.movieRequest(url: "PopularVC") { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
             self.popularMoviePageTotal = total
-            
-            DispatchQueue.main.async {
-                self.popularCollectionView.reloadData()
-            }
         }
         
         DispatchQueue.main.async {

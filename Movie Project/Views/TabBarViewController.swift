@@ -29,13 +29,10 @@ class TabBarViewController: UITabBarController {
         
         popularVC.title = "Popular Movies"
         lastestVC.title = "Upcoming Movies"
-        favoriteVC.title = "Watch List"
+        favoriteVC.title = "Watchlist"
         
         tabBar.tintColor = .label
         setViewControllers([popularVC, lastestVC, favoriteVC], animated: true)
     }
-
-
-
 
 }

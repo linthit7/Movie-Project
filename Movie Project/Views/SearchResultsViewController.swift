@@ -23,17 +23,23 @@ class SearchResultsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("View will appear searchResultsViewController")
         
         DispatchQueue.main.async {
             self.setupSearchController()
             self.navigationController?.navigationBar.tintColor = .label
+            self.searchResultsCollectionView.collectionViewLayout = self.configureLayout()
             self.searchResultsCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.searchResultsCollectionView.delegate = self
             self.searchResultsCollectionView.dataSource = self
             self.view.addSubview(self.searchResultsCollectionView)
+            Timer.scheduledTimer(timeInterval: 0.6, target: self, selector: #selector(self.showKeyboard), userInfo: nil, repeats: false)
         }
     }
     
+    @objc func showKeyboard() {
+        searchController.searchBar.becomeFirstResponder()
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -67,13 +73,14 @@ class SearchResultsViewController: UIViewController {
 
 //MARK: - UISearchBar Delegate Methods
 
-extension SearchResultsViewController: UISearchBarDelegate, UITextFieldDelegate {
+extension SearchResultsViewController: UISearchBarDelegate, UITextFieldDelegate, UISearchControllerDelegate {
     
     private func setupSearchController() {
         navigationItem.searchController = searchController
         searchController.searchBar.delegate = self
+        searchController.searchBar.showsCancelButton = false
         navigationItem.hidesSearchBarWhenScrolling = false
-        
+        navigationItem.hidesBackButton = true
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -136,9 +143,17 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
 
 extension SearchResultsViewController: UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func configureLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20.00, bottom: 0, trailing: 0)
         
-        return CGSize(width: collectionView.frame.size.width/3.5, height: collectionView.frame.size.height/4)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.45))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        return UICollectionViewCompositionalLayout(section: section)
     }
 }
 

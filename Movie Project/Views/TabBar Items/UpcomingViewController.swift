@@ -23,14 +23,11 @@ class UpcomingViewController: UIViewController {
         super.viewWillAppear(animated)
         
         title = "Upcoming Movies"
+        print("View Will Appear UpcomingViewController")
         
         request.movieRequest(url: "UpcomingVC") { movieList, _, total in
             self.upcomingMovieList.append(contentsOf: movieList)
             self.upcomingPageTotal = total
-            
-            DispatchQueue.main.async {
-                self.upcomingCollectionView.reloadData()
-            }
         }
         DispatchQueue.main.async {
             self.configureNavItem()

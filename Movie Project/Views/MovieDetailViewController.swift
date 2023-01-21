@@ -50,6 +50,7 @@ class MovieDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        print("printed from MovieDetailViewController")
         setUpMovieDetail(viewController: vc)
         navigationController?.navigationBar.prefersLargeTitles = true
         similarMovieCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)

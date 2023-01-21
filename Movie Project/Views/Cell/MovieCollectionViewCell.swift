@@ -21,7 +21,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         // Initialization code
         
         movieImage.layer.cornerCurve = .continuous
-        movieImage.layer.cornerRadius = 22
+        movieImage.layer.cornerRadius = 10
         
     }
     
