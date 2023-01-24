@@ -25,7 +25,6 @@ class WatchlistViewController: UIViewController {
             self.movieFetch()
             self.watchlistCollectionView.reloadData()
         }
-        print("printed from WatchlistViewController")
         
     }
     
@@ -50,15 +49,26 @@ class WatchlistViewController: UIViewController {
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-        let movieDetailVC = MovieDetailViewController()
+//        let movieDetailVC = MovieDetailViewController()
+//
+//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+//
+//        dataPassingQueue.async {
+//            movieDetailVC.watchListMovie = self.watchList[indexPath.row]
+//            movieDetailVC.vc = "WatchlistViewController"
+//        }
+//        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        let movieInfoVC = MovieInfoViewController()
         
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.watchListMovie = self.watchList[indexPath.row]
-            movieDetailVC.vc = "WatchlistViewController"
+            movieInfoVC.watchListMovie = self.watchList[indexPath.row]
+            movieInfoVC.vc = "WatchlistViewController"
         }
-        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
     
 }

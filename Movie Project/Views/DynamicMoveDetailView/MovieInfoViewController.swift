@@ -1,24 +1,18 @@
 //
-//  MovieDetailViewController.swift
+//  MovieInfoViewController.swift
 //  Movie Project
 //
-//  Created by Lin Thit Khant on 1/9/23.
+//  Created by Lin Thit Khant on 1/23/23.
 //
 
 import UIKit
-import SDWebImage
-import Alamofire
-import SwiftyJSON
 import CoreData
+import SwiftyJSON
+import SDWebImage
 
-class MovieDetailViewController: UIViewController {
+class MovieInfoViewController: UIViewController {
     
-    @IBOutlet weak var movieBackDropImage: UIImageView!
-    @IBOutlet weak var overViewLabel: UILabel!
-    @IBOutlet weak var releaseDateLabel: UILabel!
-    @IBOutlet weak var ratingLabel: UILabel!
-    @IBOutlet weak var genreLabel: UILabel!
-    @IBOutlet weak var similarMovieCollectionView: UICollectionView!
+    @IBOutlet weak var movieInfoCollectionView: UICollectionView!
     
     let request = Request()
     var vc: String!
@@ -49,17 +43,15 @@ class MovieDetailViewController: UIViewController {
         
         checkFavoriteState(viewController: vc)
         configureNavItem()
+        
+        movieInfoCollectionView.register(UINib(nibName: MovieInfoCollectionViewCell.reuseIdentifier, bundle: nil), forCellWithReuseIdentifier: MovieInfoCollectionViewCell.reuseIdentifier)
+        movieInfoCollectionView.dataSource = self
+        movieInfoCollectionView.delegate = self
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUpMovieDetail(viewController: vc)
-        navigationController?.navigationBar.prefersLargeTitles = true
-        similarMovieCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-        similarMovieCollectionView.delegate = self
-        similarMovieCollectionView.dataSource = self
-        view.addSubview(similarMovieCollectionView)
         
         if watchListMovie != nil {
             MovieDetailLogic.tempData(viewController: vc, movieObject: watchListMovie) { tempObject in
@@ -74,7 +66,6 @@ class MovieDetailViewController: UIViewController {
                 self.tempGenre = tempObject.value(forKey: "genreName") as? String
             }
         }
-        
     }
     
     private func configureNavItem() {
@@ -134,20 +125,6 @@ class MovieDetailViewController: UIViewController {
         }
         return nil
     }
-    
-//    private func tempData(viewController: String) {
-//        if viewController == "WatchlistViewController" {
-//            tempID = watchListMovie.value(forKey: "movieID") as? Int
-//            tempTitle = watchListMovie.value(forKey: "movieTitle") as? String
-//            tempBackDrop = watchListMovie.value(forKey: "backDropImage") as? String
-//            tempOverview = watchListMovie.value(forKey: "overView") as? String
-//            tempReleaseDate = watchListMovie.value(forKey: "releaseDate") as? String
-//            tempRating = watchListMovie.value(forKey: "rating") as? Float
-//            tempState = watchListMovie.value(forKey: "favoriteState") as? Bool
-//            tempPoster = watchListMovie.value(forKey: "posterImage") as? String
-//            tempGenre = watchListMovie.value(forKey: "genreName") as? String
-//        }
-//    }
     
     private func moviePersist(viewController: String) {
         
@@ -211,51 +188,10 @@ class MovieDetailViewController: UIViewController {
             MovieDetailLogic.delete(id: movie.id!)
         }
     }
-
-    private func insertImage(viewController: String) {
-        
-        if viewController == "WatchlistViewController" {
-            let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(watchListMovie.value(forKey: "backDropImage")!)")
-            DispatchQueue.main.async {
-                self.movieBackDropImage.sd_setImage(with: backDropImageURL)
-            }
-        }
-        else {
-            let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(movie.backdrop_path!)")
-            DispatchQueue.main.async {
-                self.movieBackDropImage.sd_setImage(with: backDropImageURL)
-            }
-        }
-    }
     
     private func setUpMovieDetail(viewController: String) {
         if viewController == "WatchlistViewController" {
-            DispatchQueue.main.async {
-                self.currentMovieID = self.watchListMovie.value(forKey: "movieID") as! Int
-                self.title = self.watchListMovie.value(forKey: "movieTitle") as? String
-                self.insertImage(viewController: viewController)
-                self.overViewLabel.text = self.watchListMovie.value(forKey: "overView") as? String
-                self.releaseDateLabel.text = "Release Date: \(self.watchListMovie.value(forKey: "releaseDate")!)"
-                self.ratingLabel.text = "Rating: \(self.watchListMovie.value(forKey: "rating")!) / 10"
-                self.genreLabel.text = "\(self.watchListMovie.value(forKey: "genreName")!)"
-            }
-        } else {
-            request.movieRequest(url: "SimilarVC", id: movie.id!) { movieResult, _, _ in
-                self.movieDetailList.append(contentsOf: movieResult)
-                DispatchQueue.main.async {
-                    self.similarMovieCollectionView.reloadData()
-                }
-            }
-            DispatchQueue.main.async {
-                self.title = self.movie.title
-                self.insertImage(viewController: viewController)
-                self.overViewLabel.text = self.movie.overview
-                self.releaseDateLabel.text = "Release Date: \(self.movie.release_date!)"
-                self.ratingLabel.text = "Rating: \(self.movie.vote_average!) / 10"
-                self.genreIDArrayConversion(insert: self.movie.genre_ids)
-                self.genreLabel.text = "Similar Movies - \(self.genreNameArray.joined(separator: ","))"
-                self.genreName = self.genreNameArray.joined(separator: ",")
-            }
+            self.currentMovieID = self.watchListMovie.value(forKey: "movieID") as! Int
         }
     }
     
@@ -265,26 +201,46 @@ class MovieDetailViewController: UIViewController {
             genreNameArray.append(Genre(genreID: genreInt).genreName)
         }
     }
+    
+    
+    
 }
 
-//MARK: - UICollectionView Delegate & DataSource Methods
-
-extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+//MARK: - MovieInfo UICollectionViewDataSource & Delegate
+extension MovieInfoViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movieDetailList.count
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
+        guard let cell = movieInfoCollectionView.dequeueReusableCell(withReuseIdentifier: MovieInfoCollectionViewCell.reuseIdentifier, for: indexPath) as? MovieInfoCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: movieDetailList[indexPath.row].title)
-        cell.insertImage(with: movieDetailList[indexPath.row].poster_path)
+        if vc == "WatchlistViewController" {
+            self.currentMovieID = self.watchListMovie.value(forKey: "movieID") as! Int
+            cell.titleLabel.text = self.watchListMovie.value(forKey: "movieTitle") as? String
+            cell.descriptionTextView.text = self.watchListMovie.value(forKey: "overView") as? String
+            cell.dateLabel.text = "Release Date: \(self.watchListMovie.value(forKey: "releaseDate")!)"
+            cell.ratingLabel.text = "Rating: \(self.watchListMovie.value(forKey: "rating")!) / 10"
+            cell.genreLabel.text = "\(self.watchListMovie.value(forKey: "genreName")!)"
+            let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(watchListMovie.value(forKey: "backDropImage")!)")
+            cell.movieImage.sd_setImage(with: backDropImageURL)
+        } else {
+            cell.titleLabel.text = self.movie.title
+            cell.descriptionTextView.text = self.movie.overview
+            cell.dateLabel.text = "Release Date: \(self.movie.release_date!)"
+            self.genreIDArrayConversion(insert: self.movie.genre_ids)
+            cell.genreLabel.text = "Similar Movies - \(self.genreNameArray.joined(separator: ","))"
+            self.genreName = self.genreNameArray.joined(separator: ",")
+            cell.ratingLabel.text = "Rating: \(self.movie.vote_average!) / 10"
+            let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(movie.backdrop_path!)")
+            cell.movieImage.sd_setImage(with: backDropImageURL)
+        }
         return cell
     }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width/3, height: 200)
+        return CGSize(width: self.view.frame.width, height: self.view.frame.height)
     }
 }
 

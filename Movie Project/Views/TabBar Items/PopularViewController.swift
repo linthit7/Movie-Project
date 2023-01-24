@@ -22,8 +22,6 @@ class PopularViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        print("View Will Appear PopularViewController")
-        
         self.request.movieRequest(url: "PopularVC") { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
             self.popularMoviePageTotal = total
@@ -61,15 +59,26 @@ class PopularViewController: UIViewController {
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-        let movieDetailVC = MovieDetailViewController()
+//        let movieDetailVC = MovieDetailViewController()
+//
+//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+//
+//        dataPassingQueue.async {
+//            movieDetailVC.movie = self.popularMovieList[indexPath.row]
+//            movieDetailVC.vc = "PopularViewController"
+//        }
+//        navigationController?.pushViewController(movieDetailVC, animated: true)
+//
+        let movieInfoVC = MovieInfoViewController()
         
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.movie = self.popularMovieList[indexPath.row]
-            movieDetailVC.vc = "PopularViewController"
+            movieInfoVC.movie = self.popularMovieList[indexPath.row]
+            movieInfoVC.vc = "PopularViewController"
         }
-        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
 }
 

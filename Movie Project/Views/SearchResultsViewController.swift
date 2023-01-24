@@ -23,8 +23,7 @@ class SearchResultsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("View will appear searchResultsViewController")
-        
+                
         DispatchQueue.main.async {
             self.setupSearchController()
             self.navigationController?.navigationBar.tintColor = .label
@@ -48,15 +47,26 @@ class SearchResultsViewController: UIViewController {
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-        let movieDetailVC = MovieDetailViewController()
+//        let movieDetailVC = MovieDetailViewController()
+//
+//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+//
+//        dataPassingQueue.async {
+//            movieDetailVC.movie = self.searchMovieList[indexPath.row]
+//            movieDetailVC.vc = "SearchResultsViewController"
+//        }
+//        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        let movieInfoVC = MovieInfoViewController()
         
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.movie = self.searchMovieList[indexPath.row]
-            movieDetailVC.vc = "SearchResultsViewController"
+            movieInfoVC.movie = self.searchMovieList[indexPath.row]
+            movieInfoVC.vc = "SearchResultsViewController"
         }
-        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
     
     private func resetTempData() {

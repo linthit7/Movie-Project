@@ -23,7 +23,7 @@ class UpcomingViewController: UIViewController {
         super.viewWillAppear(animated)
         
         title = "Upcoming Movies"
-        print("View Will Appear UpcomingViewController")
+        
         
         request.movieRequest(url: "UpcomingVC") { movieList, _, total in
             self.upcomingMovieList.append(contentsOf: movieList)
@@ -58,15 +58,26 @@ class UpcomingViewController: UIViewController {
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-        let movieDetailVC = MovieDetailViewController()
+//        let movieDetailVC = MovieDetailViewController()
+//
+//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+//
+//        dataPassingQueue.async {
+//            movieDetailVC.movie = self.upcomingMovieList[indexPath.row]
+//            movieDetailVC.vc = "UpcomingViewController"
+//        }
+//        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        let movieInfoVC = MovieInfoViewController()
         
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieDetailVC.movie = self.upcomingMovieList[indexPath.row]
-            movieDetailVC.vc = "UpcomingViewController"
+            movieInfoVC.movie = self.upcomingMovieList[indexPath.row]
+            movieInfoVC.vc = "UpcomingViewController"
         }
-        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
+        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
 }
 
