@@ -1,17 +1,15 @@
 //
-//  CollectionViewCell.swift
+//  MovieInfoTableViewCell.swift
 //  Movie Project
 //
-//  Created by Lin Thit Khant on 1/23/23.
+//  Created by Lin Thit Khant on 1/25/23.
 //
 
 import UIKit
-import CoreData
 
-class MovieInfoCollectionViewCell: UICollectionViewCell {
-    
-    static let reuseIdentifier = String(describing: MovieInfoCollectionViewCell.self)
-    private let isSeeMore: Bool = false
+class MovieInfoTableViewCell: UITableViewCell {
+
+    static let reuseIdentifier = String(describing: MovieInfoTableViewCell.self)
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var movieImage: UIImageView!
@@ -24,4 +22,10 @@ class MovieInfoCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         
     }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+    }
+    
 }

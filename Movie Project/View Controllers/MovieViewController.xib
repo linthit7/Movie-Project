@@ -8,9 +8,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MovieInfoViewController" customModule="Movie_Project" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MovieViewController" customModule="Movie_Project" customModuleProvider="target">
             <connections>
-                <outlet property="movieInfoCollectionView" destination="ptg-zI-NMO" id="KSM-6E-3On"/>
+                <outlet property="table" destination="OCY-rM-qQU" id="8hc-eK-1np"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -19,26 +19,20 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ptg-zI-NMO">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="OCY-rM-qQU">
                     <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Bsf-33-PUy">
-                        <size key="itemSize" width="128" height="128"/>
-                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    </collectionViewFlowLayout>
-                </collectionView>
+                </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="ptg-zI-NMO" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="IEZ-sf-Nyh"/>
-                <constraint firstItem="ptg-zI-NMO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="a7J-uj-k4U"/>
-                <constraint firstItem="ptg-zI-NMO" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="c7K-pQ-DtD"/>
-                <constraint firstItem="ptg-zI-NMO" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="esp-9q-RvG"/>
+                <constraint firstItem="OCY-rM-qQU" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="450-WD-gQ4"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="OCY-rM-qQU" secondAttribute="bottom" id="CwB-an-ALC"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="OCY-rM-qQU" secondAttribute="trailing" id="azd-X2-2Lb"/>
+                <constraint firstItem="OCY-rM-qQU" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="cxE-6v-KkV"/>
             </constraints>
-            <point key="canvasLocation" x="14.492753623188406" y="-12.723214285714285"/>
+            <point key="canvasLocation" x="53" y="-11"/>
         </view>
     </objects>
     <resources>

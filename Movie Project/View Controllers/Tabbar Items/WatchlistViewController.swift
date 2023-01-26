@@ -59,16 +59,14 @@ class WatchlistViewController: UIViewController {
 //        }
 //        navigationController?.pushViewController(movieDetailVC, animated: true)
         
-        let movieInfoVC = MovieInfoViewController()
-        
+        let movieVC = MovieViewController()
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieInfoVC.watchListMovie = self.watchList[indexPath.row]
-            movieInfoVC.vc = "WatchlistViewController"
+            movieVC.watchListMovie = self.watchList[indexPath.row]
+            movieVC.vc = "WatchlistViewController"
         }
-        
-        navigationController?.pushViewController(movieInfoVC, animated: true)
+        navigationController?.pushViewController(movieVC, animated: true)
     }
     
 }

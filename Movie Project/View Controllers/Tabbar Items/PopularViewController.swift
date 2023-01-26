@@ -16,6 +16,7 @@ class PopularViewController: UIViewController {
     let request = Request()
     let searchResultsVC = SearchResultsViewController()
     var popularMovieList: [MovieResult] = []
+    var movieDetailList: [MovieResult] = []
     var popularMoviePageCount: Int = 1
     var popularMoviePageTotal: Int = 0
     
@@ -68,17 +69,21 @@ class PopularViewController: UIViewController {
 //            movieDetailVC.vc = "PopularViewController"
 //        }
 //        navigationController?.pushViewController(movieDetailVC, animated: true)
-//
-        let movieInfoVC = MovieInfoViewController()
-        
-        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-        
-        dataPassingQueue.async {
-            movieInfoVC.movie = self.popularMovieList[indexPath.row]
-            movieInfoVC.vc = "PopularViewController"
+        request.movieRequest(url: "SimilarVC", id:  popularMovieList[indexPath.row].id) { movieResult, _, _ in
+            self.movieDetailList.append(contentsOf: movieResult)
+            
+            let movieVC = MovieViewController()
+            let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+            
+            dataPassingQueue.async {
+                movieVC.movie = self.popularMovieList[indexPath.row]
+                movieVC.movieDetailList = self.movieDetailList
+                movieVC.vc = "PopularViewController"
+            }
+            self.navigationController?.pushViewController(movieVC, animated: true)
+            
         }
         
-        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
 }
 

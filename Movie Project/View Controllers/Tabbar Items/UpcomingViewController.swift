@@ -18,6 +18,7 @@ class UpcomingViewController: UIViewController {
     var upcomingPageCount: Int = 1
     var upcomingPageTotal: Int = 0
     var upcomingMovieList: [MovieResult] = []
+    var movieDetailList: [MovieResult] = []
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -68,16 +69,20 @@ class UpcomingViewController: UIViewController {
 //        }
 //        navigationController?.pushViewController(movieDetailVC, animated: true)
         
-        let movieInfoVC = MovieInfoViewController()
-        
-        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-        
-        dataPassingQueue.async {
-            movieInfoVC.movie = self.upcomingMovieList[indexPath.row]
-            movieInfoVC.vc = "UpcomingViewController"
+        request.movieRequest(url: "SimilarVC", id:  upcomingMovieList[indexPath.row].id) { movieResult, _, _ in
+            self.movieDetailList.append(contentsOf: movieResult)
+            
+            let movieVC = MovieViewController()
+            let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+            
+            dataPassingQueue.async {
+                movieVC.movie = self.upcomingMovieList[indexPath.row]
+                movieVC.movieDetailList = self.movieDetailList
+                movieVC.vc = "UpcomingViewController"
+            }
+            self.navigationController?.pushViewController(movieVC, animated: true)
+            
         }
-        
-        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
 }
 

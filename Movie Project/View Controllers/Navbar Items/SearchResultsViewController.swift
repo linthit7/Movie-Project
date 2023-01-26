@@ -19,6 +19,7 @@ class SearchResultsViewController: UIViewController {
     var searchPageCount: Int = 1
     var searchPageTotal: Int = 0
     var searchMovieList: [MovieResult] = []
+    var movieDetailList: [MovieResult] = []
     var queryName: String = ""
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,16 +58,20 @@ class SearchResultsViewController: UIViewController {
 //        }
 //        navigationController?.pushViewController(movieDetailVC, animated: true)
         
-        let movieInfoVC = MovieInfoViewController()
-        
-        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-        
-        dataPassingQueue.async {
-            movieInfoVC.movie = self.searchMovieList[indexPath.row]
-            movieInfoVC.vc = "SearchResultsViewController"
+        request.movieRequest(url: "SimilarVC", id:  searchMovieList[indexPath.row].id) { movieResult, _, _ in
+            self.movieDetailList.append(contentsOf: movieResult)
+            
+            let movieVC = MovieViewController()
+            let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
+            
+            dataPassingQueue.async {
+                movieVC.movie = self.searchMovieList[indexPath.row]
+                movieVC.movieDetailList = self.movieDetailList
+                movieVC.vc = "SearchResultsViewController"
+            }
+            self.navigationController?.pushViewController(movieVC, animated: true)
+            
         }
-        
-        navigationController?.pushViewController(movieInfoVC, animated: true)
     }
     
     private func resetTempData() {
