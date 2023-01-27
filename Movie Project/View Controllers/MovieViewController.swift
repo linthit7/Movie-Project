@@ -21,9 +21,9 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var favoriteState: Bool?
     var genreNameArray: [String] = []
     var genreName: String?
-    var watchListMovie: NSManagedObject!
+    var watchListMovie: Movie!
     var currentMovieID: Int = 0
-    var tempMovie: NSManagedObject!
+    var tempMovie: Movie!
     var tempID: Int!
     var tempTitle: String!
     var tempBackDrop: String!
@@ -52,15 +52,17 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         setUpMovieDetail(viewController: vc)
         if watchListMovie != nil {
             MovieDetailLogic.tempData(viewController: vc, movieObject: watchListMovie) { tempObject in
-                self.tempID = tempObject.value(forKey: "movieID") as? Int
-                self.tempTitle = tempObject.value(forKey: "movieTitle") as? String
-                self.tempBackDrop = tempObject.value(forKey: "backDropImage") as? String
-                self.tempOverview = tempObject.value(forKey: "overView") as? String
-                self.tempReleaseDate = tempObject.value(forKey: "releaseDate") as? String
-                self.tempRating = tempObject.value(forKey: "rating") as? Float
-                self.tempState = tempObject.value(forKey: "favoriteState") as? Bool
-                self.tempPoster = tempObject.value(forKey: "posterImage") as? String
-                self.tempGenre = tempObject.value(forKey: "genreName") as? String
+
+                self.tempMovie = tempObject
+                self.tempID = Int(tempObject.movieID)
+                self.tempTitle = tempObject.movieTitle
+                self.tempBackDrop = tempObject.backDropImage
+                self.tempOverview = tempObject.overView
+                self.tempReleaseDate = tempObject.releaseDate
+                self.tempRating = tempObject.rating as? Float
+                self.tempState = tempObject.favoriteState as? Bool
+                self.tempPoster = tempObject.posterImage
+                self.tempGenre = tempObject.genreName
             }
         }
     }
@@ -99,7 +101,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
         
         if viewController == "WatchlistViewController" {
-            fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(watchListMovie.value(forKey: "movieID")!)")
+            fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(watchListMovie.movieID)")
         } else {
             fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(movie.id!)")
         }
@@ -135,6 +137,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
             let managedContext = appDelegate.persistentContainer.viewContext
             guard let movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext) else {return}
+            
             let nsMovie = NSManagedObject(entity: movieEntity, insertInto: managedContext)
             
             nsMovie.setValue(tempID, forKey: "movieID")
@@ -186,7 +189,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     private func movieDelete(viewController: String) {
         if viewController == "WatchlistViewController" {
-            MovieDetailLogic.delete(id: tempID!)
+            MovieDetailLogic.delete(id: Int(tempMovie.movieID))
         } else {
             MovieDetailLogic.delete(id: movie.id!)
         }
@@ -194,7 +197,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     private func setUpMovieDetail(viewController: String) {
         if viewController == "WatchlistViewController" {
-            self.currentMovieID = self.watchListMovie.value(forKey: "movieID") as! Int
+            self.currentMovieID = Int(watchListMovie.movieID)
         }
     }
     
@@ -225,22 +228,22 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
             return UITableViewCell()
         }
             if vc == "WatchlistViewController" {
-                self.currentMovieID = self.watchListMovie.value(forKey: "movieID") as! Int
-                cell.titleLabel.text = self.watchListMovie.value(forKey: "movieTitle") as? String
-                cell.descriptionTextView.text = self.watchListMovie.value(forKey: "overView") as? String
-                cell.dateLabel.text = "Release Date: \(self.watchListMovie.value(forKey: "releaseDate")!)"
-                cell.ratingLabel.text = "Rating: \(self.watchListMovie.value(forKey: "rating")!) / 10"
-                cell.genreLabel.text = "\(self.watchListMovie.value(forKey: "genreName")!)"
-                let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(watchListMovie.value(forKey: "backDropImage")!)")
+                currentMovieID = Int(watchListMovie.movieID)
+                cell.titleLabel.text = watchListMovie.movieTitle
+                cell.descriptionLabel.text = watchListMovie.overView
+                cell.dateLabel.text = "Release Date: \(watchListMovie.releaseDate!)"
+                cell.ratingLabel.text = "Rating: \(watchListMovie.rating!) / 10"
+                cell.genreLabel.text = "\(self.watchListMovie.genreName!)"
+                let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(watchListMovie.backDropImage!)")
                 cell.movieImage.sd_setImage(with: backDropImageURL)
             } else {
-                cell.titleLabel.text = self.movie.title
-                cell.descriptionTextView.text = self.movie.overview
-                cell.dateLabel.text = "Release Date: \(self.movie.release_date!)"
-                self.genreIDArrayConversion(insert: self.movie.genre_ids)
-                cell.genreLabel.text = "Similar Movies - \(self.genreNameArray.joined(separator: ","))"
-                self.genreName = self.genreNameArray.joined(separator: ",")
-                cell.ratingLabel.text = "Rating: \(self.movie.vote_average!) / 10"
+                cell.titleLabel.text = movie.title
+                cell.descriptionLabel.text = movie.overview
+                cell.dateLabel.text = "Release Date: \(movie.release_date!)"
+                genreIDArrayConversion(insert: movie.genre_ids)
+                cell.genreLabel.text = "Similar Movies - \(genreNameArray.joined(separator: ","))"
+                genreName = genreNameArray.joined(separator: ",")
+                cell.ratingLabel.text = "Rating: \(movie.vote_average!) / 10"
                 let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(movie.backdrop_path!)")
                 cell.movieImage.sd_setImage(with: backDropImageURL)
             }
@@ -253,14 +256,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
      }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0: return 500
-        case 1: return 200
-        default: return 0
-        }
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
-    
-    
-    
 }

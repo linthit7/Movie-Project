@@ -36,9 +36,7 @@ class PopularViewController: UIViewController {
             self.popularCollectionView.delegate = self
             self.popularCollectionView.collectionViewLayout = self.configureLayout()
             self.view.addSubview(self.popularCollectionView)
-            
         }
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -60,15 +58,7 @@ class PopularViewController: UIViewController {
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-//        let movieDetailVC = MovieDetailViewController()
-//
-//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-//
-//        dataPassingQueue.async {
-//            movieDetailVC.movie = self.popularMovieList[indexPath.row]
-//            movieDetailVC.vc = "PopularViewController"
-//        }
-//        navigationController?.pushViewController(movieDetailVC, animated: true)
+        
         request.movieRequest(url: "SimilarVC", id:  popularMovieList[indexPath.row].id) { movieResult, _, _ in
             self.movieDetailList.append(contentsOf: movieResult)
             

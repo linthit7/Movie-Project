@@ -8,7 +8,7 @@
 import UIKit
 
 class TabBarViewController: UITabBarController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -20,19 +20,19 @@ class TabBarViewController: UITabBarController {
         
         let popularVC = UINavigationController(rootViewController: PopularViewController())
         let lastestVC = UINavigationController(rootViewController: UpcomingViewController())
-        let favoriteVC = UINavigationController(rootViewController: WatchlistViewController())
+        let favoriteVC = UINavigationController(rootViewController: FavoriteViewController())
         
         popularVC.tabBarItem.image = UIImage(systemName: "10.square.fill")
         lastestVC.tabBarItem.image = UIImage(systemName: "arrow.up.square.fill")
         favoriteVC.tabBarItem.image = UIImage(systemName:
-            "star.fill")
+                                                "star.fill")
         
         popularVC.title = "Popular Movies"
         lastestVC.title = "Upcoming Movies"
-        favoriteVC.title = "Watchlist"
+        favoriteVC.title = "Favorite Movies"
         
         tabBar.tintColor = .label
         setViewControllers([popularVC, lastestVC, favoriteVC], animated: true)
     }
-
+    
 }

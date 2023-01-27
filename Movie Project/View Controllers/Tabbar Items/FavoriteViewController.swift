@@ -8,22 +8,22 @@
 import UIKit
 import CoreData
 
-class WatchlistViewController: UIViewController {
+class FavoriteViewController: UIViewController {
     
-    @IBOutlet weak var watchlistCollectionView: UICollectionView!
+    @IBOutlet weak var favoriteCollectionView: UICollectionView!
     
-    var watchList: [NSManagedObject] = []
+    var favorite: [Movie] = []
     
     override func viewWillAppear(_ animated: Bool) {
         DispatchQueue.main.async {
-            self.title = "Watch List"
+            self.title = "Favorite Movies"
             
-            self.watchlistCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-            self.watchlistCollectionView.delegate = self
-            self.watchlistCollectionView.dataSource = self
-            self.watchlistCollectionView.collectionViewLayout = self.configureLayout()
+            self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+            self.favoriteCollectionView.delegate = self
+            self.favoriteCollectionView.dataSource = self
+            self.favoriteCollectionView.collectionViewLayout = self.configureLayout()
             self.movieFetch()
-            self.watchlistCollectionView.reloadData()
+            self.favoriteCollectionView.reloadData()
         }
         
     }
@@ -31,39 +31,30 @@ class WatchlistViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        watchlistCollectionView.frame = view.bounds
+        favoriteCollectionView.frame = view.bounds
     }
     
     private func movieFetch() {
-        watchList = []
+        favorite = []
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
         let managedContext = appDelegate.persistentContainer.viewContext
         let  fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
         
         do {
-            guard let result = try managedContext.fetch(fetchRequest) as? [NSManagedObject] else { return }
-            self.watchList = result
+            guard let result = try managedContext.fetch(fetchRequest) as? [Movie] else { return }
+            self.favorite = result
         } catch let error as NSError {
             debugPrint(error)
         }
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-//        let movieDetailVC = MovieDetailViewController()
-//
-//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-//
-//        dataPassingQueue.async {
-//            movieDetailVC.watchListMovie = self.watchList[indexPath.row]
-//            movieDetailVC.vc = "WatchlistViewController"
-//        }
-//        navigationController?.pushViewController(movieDetailVC, animated: true)
         
         let movieVC = MovieViewController()
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
         
         dataPassingQueue.async {
-            movieVC.watchListMovie = self.watchList[indexPath.row]
+            movieVC.watchListMovie = self.favorite[indexPath.row]
             movieVC.vc = "WatchlistViewController"
         }
         navigationController?.pushViewController(movieVC, animated: true)
@@ -73,18 +64,18 @@ class WatchlistViewController: UIViewController {
 
 //MARK: - UICollectionView Datasource and Delegate Methods
 
-extension WatchlistViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension FavoriteViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return watchList.count
+        return favorite.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: watchList[indexPath.row].value(forKey: "movieTitle") as! String)
-        cell.insertImage(with: watchList[indexPath.row].value(forKey: "posterImage") as! String)
+        cell.insertTitle(with: favorite[indexPath.row].movieTitle!)
+        cell.insertImage(with: favorite[indexPath.row].posterImage!)
         return cell
     }
     
@@ -95,7 +86,7 @@ extension WatchlistViewController: UICollectionViewDataSource, UICollectionViewD
 
 //MARK: - UICollectionViewDelegateFlowLayout Methods
 
-extension WatchlistViewController {
+extension FavoriteViewController {
     
     func configureLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))

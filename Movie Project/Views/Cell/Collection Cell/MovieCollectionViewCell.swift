@@ -18,7 +18,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         
         movieImage.layer.cornerCurve = .continuous
         movieImage.layer.cornerRadius = 10

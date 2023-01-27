@@ -22,11 +22,6 @@ class MovieCollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, U
         collectionView.dataSource = self
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-    
-    
     
     //MARK: - UICollectionViewDelegate & DataSource & DelegateFlowLayout
     

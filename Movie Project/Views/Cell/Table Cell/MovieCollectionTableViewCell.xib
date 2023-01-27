@@ -17,9 +17,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="514" height="198"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xEa-ME-lb5">
-                        <rect key="frame" x="0.0" y="0.0" width="514" height="198"/>
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="xEa-ME-lb5">
+                        <rect key="frame" x="8" y="0.0" width="498" height="198"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="198" id="Abw-vz-31F"/>
+                        </constraints>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="31b-Ad-BJn">
                             <size key="itemSize" width="128" height="128"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -29,9 +32,9 @@
                     </collectionView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="xEa-ME-lb5" secondAttribute="trailing" id="Ea7-ru-AH6"/>
+                    <constraint firstAttribute="trailing" secondItem="xEa-ME-lb5" secondAttribute="trailing" constant="8" id="Ea7-ru-AH6"/>
                     <constraint firstAttribute="bottom" secondItem="xEa-ME-lb5" secondAttribute="bottom" id="HoW-4A-SyR"/>
-                    <constraint firstItem="xEa-ME-lb5" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="eVB-B6-Qfr"/>
+                    <constraint firstItem="xEa-ME-lb5" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="eVB-B6-Qfr"/>
                     <constraint firstItem="xEa-ME-lb5" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="j9X-yd-a5o"/>
                 </constraints>
             </tableViewCellContentView>

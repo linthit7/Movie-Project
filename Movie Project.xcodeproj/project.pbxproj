@@ -35,8 +35,8 @@
 		F9FD03E72966BA2A0039FA0B /* PopularViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9FD03E52966BA2A0039FA0B /* PopularViewController.xib */; };
 		F9FD03EB2966BA490039FA0B /* UpcomingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FD03E92966BA490039FA0B /* UpcomingViewController.swift */; };
 		F9FD03EC2966BA490039FA0B /* UpcomingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9FD03EA2966BA490039FA0B /* UpcomingViewController.xib */; };
-		F9FD03EF2966BA560039FA0B /* WatchlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FD03ED2966BA560039FA0B /* WatchlistViewController.swift */; };
-		F9FD03F02966BA560039FA0B /* WatchlistViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9FD03EE2966BA560039FA0B /* WatchlistViewController.xib */; };
+		F9FD03EF2966BA560039FA0B /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FD03ED2966BA560039FA0B /* FavoriteViewController.swift */; };
+		F9FD03F02966BA560039FA0B /* FavoriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9FD03EE2966BA560039FA0B /* FavoriteViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,8 +72,8 @@
 		F9FD03E52966BA2A0039FA0B /* PopularViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopularViewController.xib; sourceTree = "<group>"; };
 		F9FD03E92966BA490039FA0B /* UpcomingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingViewController.swift; sourceTree = "<group>"; };
 		F9FD03EA2966BA490039FA0B /* UpcomingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpcomingViewController.xib; sourceTree = "<group>"; };
-		F9FD03ED2966BA560039FA0B /* WatchlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViewController.swift; sourceTree = "<group>"; };
-		F9FD03EE2966BA560039FA0B /* WatchlistViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WatchlistViewController.xib; sourceTree = "<group>"; };
+		F9FD03ED2966BA560039FA0B /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
+		F9FD03EE2966BA560039FA0B /* FavoriteViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,8 +176,8 @@
 				F9FD03E52966BA2A0039FA0B /* PopularViewController.xib */,
 				F9FD03E92966BA490039FA0B /* UpcomingViewController.swift */,
 				F9FD03EA2966BA490039FA0B /* UpcomingViewController.xib */,
-				F9FD03ED2966BA560039FA0B /* WatchlistViewController.swift */,
-				F9FD03EE2966BA560039FA0B /* WatchlistViewController.xib */,
+				F9FD03ED2966BA560039FA0B /* FavoriteViewController.swift */,
+				F9FD03EE2966BA560039FA0B /* FavoriteViewController.xib */,
 			);
 			path = "Tabbar Items";
 			sourceTree = "<group>";
@@ -307,7 +307,7 @@
 				F971101F29812B3E0018687D /* MovieViewController.xib in Resources */,
 				F92448FE2967CC0200C26EAE /* MovieCollectionViewCell.xib in Resources */,
 				F9FD03E72966BA2A0039FA0B /* PopularViewController.xib in Resources */,
-				F9FD03F02966BA560039FA0B /* WatchlistViewController.xib in Resources */,
+				F9FD03F02966BA560039FA0B /* FavoriteViewController.xib in Resources */,
 				F9FD03D62966B1AF0039FA0B /* Assets.xcassets in Resources */,
 				F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */,
 			);
@@ -373,7 +373,7 @@
 				F90054F5296C152D004F44C8 /* Genre.swift in Sources */,
 				F971101E29812B3E0018687D /* MovieViewController.swift in Sources */,
 				F92448FD2967CC0200C26EAE /* MovieCollectionViewCell.swift in Sources */,
-				F9FD03EF2966BA560039FA0B /* WatchlistViewController.swift in Sources */,
+				F9FD03EF2966BA560039FA0B /* FavoriteViewController.swift in Sources */,
 				F9FD03CA2966B1AD0039FA0B /* AppDelegate.swift in Sources */,
 				F92448F82966D43E00C26EAE /* TabBarViewController.swift in Sources */,
 				F9FD03CC2966B1AD0039FA0B /* SceneDelegate.swift in Sources */,

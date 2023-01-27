@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 import UIKit
 
-class MovieDetailLogic {
+struct MovieDetailLogic {
     
     static func delete(id: Int) {
         
@@ -17,11 +17,10 @@ class MovieDetailLogic {
         let managedContext = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
         fetchRequest.fetchLimit = 1
-        
         fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(id)")
         
         do {
-            guard let result = try managedContext.fetch(fetchRequest) as? [NSManagedObject] else {return}
+            guard let result = try managedContext.fetch(fetchRequest) as? [Movie] else {return}
             guard let movie = result.first else {return}
             managedContext.delete(movie)
             do {
@@ -32,10 +31,10 @@ class MovieDetailLogic {
         }
     }
     
-    static func tempData(viewController: String, movieObject: NSManagedObject, completion: @escaping (NSManagedObject) -> Void) {
+    static func tempData(viewController: String, movieObject: Movie, completion: @escaping (Movie) -> Void) {
         if viewController == "WatchlistViewController" {
             let tempObject = movieObject
-        completion(tempObject)
+            completion(tempObject)
         }
     }
 }
