@@ -10,14 +10,27 @@ import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
+    static let defaults = UserDefaults.standard
+    static var sessionState: Bool = false
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        print(url!)
+//        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+//        print(url!)
+        
+        AuthLogic.checkToken()
+        if AuthLogic.checkSession() == true {
+            AppDelegate.sessionState = true
+//            Request.getAccountDetail(sessionID: AuthLogic.getSession()!)
+        } else {
+            AppDelegate.sessionState = false
+        }
+        
+        
         return true
     }
+   
 
     // MARK: UISceneSession Lifecycle
 

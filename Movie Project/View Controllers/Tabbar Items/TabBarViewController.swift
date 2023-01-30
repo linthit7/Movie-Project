@@ -13,26 +13,28 @@ class TabBarViewController: UITabBarController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        self.setUpNavBar()
+        self.setUpTabBar()
     }
     
-    private func setUpNavBar() {
+    private func setUpTabBar() {
         
         let popularVC = UINavigationController(rootViewController: PopularViewController())
         let lastestVC = UINavigationController(rootViewController: UpcomingViewController())
         let favoriteVC = UINavigationController(rootViewController: FavoriteViewController())
+        let accountVC = UINavigationController(rootViewController: AppDelegate.sessionState ? AccountViewController() : LoginViewController() )
         
         popularVC.tabBarItem.image = UIImage(systemName: "10.square.fill")
         lastestVC.tabBarItem.image = UIImage(systemName: "arrow.up.square.fill")
-        favoriteVC.tabBarItem.image = UIImage(systemName:
-                                                "star.fill")
+        favoriteVC.tabBarItem.image = UIImage(systemName: "star.fill")
+        accountVC.tabBarItem.image = UIImage(systemName: "person.crop.square")
         
         popularVC.title = "Popular Movies"
         lastestVC.title = "Upcoming Movies"
         favoriteVC.title = "Favorite Movies"
+        accountVC.title = "My Account"
         
         tabBar.tintColor = .label
-        setViewControllers([popularVC, lastestVC, favoriteVC], animated: true)
+        setViewControllers([popularVC, lastestVC, favoriteVC, accountVC], animated: true)
     }
     
 }

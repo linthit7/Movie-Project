@@ -28,7 +28,7 @@ class SearchResultsViewController: UIViewController {
         DispatchQueue.main.async {
             self.setupSearchController()
             self.navigationController?.navigationBar.tintColor = .label
-            self.searchResultsCollectionView.collectionViewLayout = self.configureLayout()
+            self.searchResultsCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
             self.searchResultsCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.searchResultsCollectionView.delegate = self
             self.searchResultsCollectionView.dataSource = self
@@ -43,22 +43,11 @@ class SearchResultsViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         searchResultsCollectionView.frame = view.bounds
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
-//        let movieDetailVC = MovieDetailViewController()
-//
-//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-//
-//        dataPassingQueue.async {
-//            movieDetailVC.movie = self.searchMovieList[indexPath.row]
-//            movieDetailVC.vc = "SearchResultsViewController"
-//        }
-//        navigationController?.pushViewController(movieDetailVC, animated: true)
-        
-        request.movieRequest(url: "SimilarVC", id:  searchMovieList[indexPath.row].id) { movieResult, _, _ in
+        request.movieRequest(url: getVC.similarVC, id:  searchMovieList[indexPath.row].id) { movieResult, _, _ in
             self.movieDetailList.append(contentsOf: movieResult)
             
             let movieVC = MovieViewController()
@@ -67,10 +56,9 @@ class SearchResultsViewController: UIViewController {
             dataPassingQueue.async {
                 movieVC.movie = self.searchMovieList[indexPath.row]
                 movieVC.movieDetailList = self.movieDetailList
-                movieVC.vc = "SearchResultsViewController"
+                movieVC.vc = getVC.searchResultsVC
             }
             self.navigationController?.pushViewController(movieVC, animated: true)
-            
         }
     }
     
@@ -108,7 +96,7 @@ extension SearchResultsViewController: UISearchBarDelegate, UITextFieldDelegate,
             return
         }
         queryName = text
-        request.movieRequest(url: "SearchResultsVC", queryName: text) { movieResult, _, total in
+        request.movieRequest(url: getVC.searchResultsVC, queryName: text) { movieResult, _, total in
             self.searchMovieList = movieResult
             self.searchPageTotal = total
             
@@ -138,8 +126,7 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
                 return UICollectionViewCell()
             }
-            cell.insertTitle(with: searchMovieList[indexPath.row].title)
-            cell.insertImage(with: searchMovieList[indexPath.row].poster_path)
+            cell.populateWithMovieResult(movie: searchMovieList[indexPath.row])
             return cell
         }
         else {
@@ -154,24 +141,6 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
     }
 }
 
-//MARK: - Collection View DelegateFlowLayout Methods
-
-extension SearchResultsViewController: UICollectionViewDelegateFlowLayout {
-    
-    func configureLayout() -> UICollectionViewCompositionalLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20.00, bottom: 0, trailing: 0)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.45))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-        return UICollectionViewCompositionalLayout(section: section)
-    }
-}
-
 //MARK: - UIScrollViewDelegate Methods
 
 extension SearchResultsViewController: UIScrollViewDelegate {
@@ -180,7 +149,7 @@ extension SearchResultsViewController: UIScrollViewDelegate {
         let position = scrollView.contentOffset.y
         if position > (searchResultsCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
             
-            request.movieRequest(url: "SearchResultsVC", queryName: queryName, pagination: true, pageCount: searchPageCount, pageTotal: searchPageTotal) { movieResult, count, _ in
+            request.movieRequest(url: getVC.searchResultsVC, queryName: queryName, pagination: true, pageCount: searchPageCount, pageTotal: searchPageTotal) { movieResult, count, _ in
                 self.searchMovieList.append(contentsOf: movieResult)
                 self.searchPageCount = count
                 

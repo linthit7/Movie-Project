@@ -33,8 +33,7 @@ class MovieCollectionTableViewCell: UITableViewCell, UICollectionViewDelegate, U
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: movieDetailList[indexPath.row].title)
-        cell.insertImage(with: movieDetailList[indexPath.row].poster_path)
+        cell.populateWithMovieResult(movie: movieDetailList[indexPath.row])
         return cell
     }
     

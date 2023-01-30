@@ -10,7 +10,7 @@ import CoreData
 import SwiftyJSON
 
 class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
     @IBOutlet var table: UITableView!
     
     let request = Request()
@@ -41,7 +41,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         configureNavItem()
         table.register(UINib(nibName: MovieCollectionTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: MovieCollectionTableViewCell.reuseIdentifier)
         table.register(UINib(nibName: MovieInfoTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: MovieInfoTableViewCell.reuseIdentifier)
-        view.addSubview(table)
+//        view.addSubview(table)
         table.delegate = self
         table.dataSource = self
     }
@@ -49,9 +49,12 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        currentMovieID = MovieDetailLogic.setUpMovieDetail(viewController: vc, getMovie: watchListMovie)
+        
         setUpMovieDetail(viewController: vc)
+
         if watchListMovie != nil {
-            MovieDetailLogic.tempData(viewController: vc, movieObject: watchListMovie) { tempObject in
+            MovieLogic.tempData(viewController: vc, movieObject: watchListMovie) { tempObject in
 
                 self.tempMovie = tempObject
                 self.tempID = Int(tempObject.movieID)
@@ -67,15 +70,14 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-            table.frame = view.bounds
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//            table.frame = view.bounds
+//    }
     
     private func configureNavItem() {
         navigationController?.navigationBar.tintColor = .label
-        
         switch favoriteState {
         case false:
             let favoriteItem = UIBarButtonItem(image: UIImage(systemName: "star"), style: .plain, target: self, action: #selector(favoriteAdd(_:)))
@@ -97,10 +99,9 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
         let managedContext = appDelegate.persistentContainer.viewContext
-        
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
         
-        if viewController == "WatchlistViewController" {
+        if viewController == getVC.favoriteVC {
             fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(watchListMovie.movieID)")
         } else {
             fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(movie.id!)")
@@ -117,23 +118,9 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    private func fetchAnObject() -> Bool? {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return nil}
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
-        fetchRequest.predicate = NSPredicate(format: "movieID = %@", "\(movie.id!)")
-        do {
-            let object = try managedContext.fetch(fetchRequest)
-            if object.isEmpty {return true} else {return false}
-        } catch let error {
-            print(error)
-        }
-        return nil
-    }
-    
     private func moviePersist(viewController: String) {
         
-        if viewController == "WatchlistViewController" {
+        if viewController == getVC.favoriteVC {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
             let managedContext = appDelegate.persistentContainer.viewContext
             guard let movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext) else {return}
@@ -155,7 +142,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 print(error)
             }
         } else {
-            switch fetchAnObject() {
+            switch MovieLogic.fetchAnObject(getMovie: movie) {
             case true:
                 guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
                 let managedContext = appDelegate.persistentContainer.viewContext
@@ -184,42 +171,33 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @objc private func favoriteRemove(_ sender: UIButton) {
         favoriteState = false
         configureNavItem()
-        movieDelete(viewController: vc)
-    }
-    
-    private func movieDelete(viewController: String) {
-        if viewController == "WatchlistViewController" {
-            MovieDetailLogic.delete(id: Int(tempMovie.movieID))
-        } else {
-            MovieDetailLogic.delete(id: movie.id!)
-        }
+        MovieLogic.delete(id: vc == getVC.favoriteVC ? Int(tempMovie.movieID) : movie.id!)
     }
     
     private func setUpMovieDetail(viewController: String) {
-        if viewController == "WatchlistViewController" {
+        if viewController == getVC.favoriteVC {
             self.currentMovieID = Int(watchListMovie.movieID)
         }
     }
     
-    private func genreIDArrayConversion(insert intArray: [JSON]) {
-        for g in 0..<intArray.count {
-            let genreInt: Int = intArray[g].rawValue as! Int
-            genreNameArray.append(Genre(genreID: genreInt).genreName)
-        }
-    }
+//    private func genreIDArrayConversion(insert intArray: [JSON]) {
+//        for g in 0..<intArray.count {
+//            let genreInt: Int = intArray[g].rawValue as! Int
+//            genreNameArray.append(Genre(genreID: genreInt).genreName)
+//        }
+//    }
+    
+    
     
     //MARK: - UITableViewDelegate & DataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
         switch vc {
-        case "WatchlistViewController": return 1
+        case getVC.favoriteVC: return 1
         default: return 2
         }
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 1 }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
@@ -227,22 +205,25 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
             guard let cell = table.dequeueReusableCell(withIdentifier: MovieInfoTableViewCell.reuseIdentifier, for: indexPath) as? MovieInfoTableViewCell else {
             return UITableViewCell()
         }
-            if vc == "WatchlistViewController" {
+            if vc == getVC.favoriteVC {
                 currentMovieID = Int(watchListMovie.movieID)
                 cell.titleLabel.text = watchListMovie.movieTitle
                 cell.descriptionLabel.text = watchListMovie.overView
                 cell.dateLabel.text = "Release Date: \(watchListMovie.releaseDate!)"
                 cell.ratingLabel.text = "Rating: \(watchListMovie.rating!) / 10"
-                cell.genreLabel.text = "\(self.watchListMovie.genreName!)"
+                cell.genreLabel.text = "Genre: \(self.watchListMovie.genreName!)"
                 let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(watchListMovie.backDropImage!)")
                 cell.movieImage.sd_setImage(with: backDropImageURL)
             } else {
                 cell.titleLabel.text = movie.title
                 cell.descriptionLabel.text = movie.overview
                 cell.dateLabel.text = "Release Date: \(movie.release_date!)"
-                genreIDArrayConversion(insert: movie.genre_ids)
-                cell.genreLabel.text = "Similar Movies - \(genreNameArray.joined(separator: ","))"
-                genreName = genreNameArray.joined(separator: ",")
+//                genreIDArrayConversion(insert: movie.genre_ids)
+                if genreNameArray.isEmpty {
+                    genreNameArray = MovieLogic.genreIDArrayConversion(insert: movie.genre_ids)
+                }
+                cell.genreLabel.text = "Similar Movies - \(genreNameArray.joined(separator: ", "))"
+                genreName = genreNameArray.joined(separator: ", ")
                 cell.ratingLabel.text = "Rating: \(movie.vote_average!) / 10"
                 let backDropImageURL = URL(string: "\(Support.backDropImageURL)\(movie.backdrop_path!)")
                 cell.movieImage.sd_setImage(with: backDropImageURL)

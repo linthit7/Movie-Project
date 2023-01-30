@@ -13,7 +13,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     static let identifier = "MovieCollectionViewCell"
 
     @IBOutlet weak var movieImage: UIImageView!
-    
     @IBOutlet weak var movieTitle: UILabel!
     
     override func awakeFromNib() {
@@ -21,19 +20,24 @@ class MovieCollectionViewCell: UICollectionViewCell {
         
         movieImage.layer.cornerCurve = .continuous
         movieImage.layer.cornerRadius = 10
-        
     }
     
-    func insertTitle(with title: String) {
+    func populateWithMovieResult(movie: MovieResult) {
+        insertTitle(with: movie.title)
+        insertImage(with: movie.poster_path)
+    }
+    func populateWithMovie(movie: Movie) {
+        insertTitle(with: movie.movieTitle!)
+        insertImage(with: movie.posterImage!)
+    }
+    private func insertTitle(with title: String) {
         DispatchQueue.main.async {
             self.movieTitle.text = title
         }
     }
-    
-    func insertImage(with image: String) {
+    private func insertImage(with image: String) {
         let posterImageURL = URL(string: "\(Support.posterImageURL)\(image)")
         DispatchQueue.main.async {
-            
             self.movieImage.sd_setImage(with: posterImageURL)
         }
     }

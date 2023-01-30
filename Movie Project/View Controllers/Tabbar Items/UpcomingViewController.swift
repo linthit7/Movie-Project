@@ -26,7 +26,7 @@ class UpcomingViewController: UIViewController {
         title = "Upcoming Movies"
         
         
-        request.movieRequest(url: "UpcomingVC") { movieList, _, total in
+        request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
             self.upcomingMovieList.append(contentsOf: movieList)
             self.upcomingPageTotal = total
         }
@@ -35,15 +35,14 @@ class UpcomingViewController: UIViewController {
             self.upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.upcomingCollectionView.delegate = self
             self.upcomingCollectionView.dataSource = self
-            self.upcomingCollectionView.collectionViewLayout = self.configureLayout()
+            self.upcomingCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
             self.view.addSubview(self.upcomingCollectionView)
         }
-        
     }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         upcomingCollectionView.frame = view.bounds
     }
     
@@ -58,18 +57,8 @@ class UpcomingViewController: UIViewController {
         navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
-    private func movieDetailPassingMethod(for indexPath: IndexPath) {
-//        let movieDetailVC = MovieDetailViewController()
-//
-//        let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-//
-//        dataPassingQueue.async {
-//            movieDetailVC.movie = self.upcomingMovieList[indexPath.row]
-//            movieDetailVC.vc = "UpcomingViewController"
-//        }
-//        navigationController?.pushViewController(movieDetailVC, animated: true)
-        
-        request.movieRequest(url: "SimilarVC", id:  upcomingMovieList[indexPath.row].id) { movieResult, _, _ in
+    private func movieDetailPassingMethod(for indexPath: IndexPath) {        
+        request.movieRequest(url: getVC.similarVC, id:  upcomingMovieList[indexPath.row].id) { movieResult, _, _ in
             self.movieDetailList.append(contentsOf: movieResult)
             
             let movieVC = MovieViewController()
@@ -78,7 +67,7 @@ class UpcomingViewController: UIViewController {
             dataPassingQueue.async {
                 movieVC.movie = self.upcomingMovieList[indexPath.row]
                 movieVC.movieDetailList = self.movieDetailList
-                movieVC.vc = "UpcomingViewController"
+                movieVC.vc = getVC.upcomingVC
             }
             self.navigationController?.pushViewController(movieVC, animated: true)
             
@@ -98,30 +87,11 @@ extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDe
                 as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.insertTitle(with: upcomingMovieList[indexPath.row].title)
-        cell.insertImage(with: upcomingMovieList[indexPath.row].poster_path)
+        cell.populateWithMovieResult(movie: upcomingMovieList[indexPath.row])
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         movieDetailPassingMethod(for: indexPath)
-    }
-}
-
-//MARK: - UICollectionViewDelegateFlowLayout Methods
-
-extension UpcomingViewController {
-    
-    func configureLayout() -> UICollectionViewCompositionalLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20.00, bottom: 0, trailing: 0)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.45))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-        return UICollectionViewCompositionalLayout(section: section)
     }
 }
 
@@ -133,7 +103,7 @@ extension UpcomingViewController: UIScrollViewDelegate {
         let position = scrollView.contentOffset.y
         if position > (upcomingCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
             
-            request.movieRequest(url: "UpcomingVC", pagination: true, pageCount: upcomingPageCount, pageTotal: upcomingPageTotal) { movieList, count, _ in
+            request.movieRequest(url: getVC.upcomingVC, pagination: true, pageCount: upcomingPageCount, pageTotal: upcomingPageTotal) { movieList, count, _ in
                 self.upcomingMovieList.append(contentsOf: movieList)
                 self.upcomingPageCount = count
             
