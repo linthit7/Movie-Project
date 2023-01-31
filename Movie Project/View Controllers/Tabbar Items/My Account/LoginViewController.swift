@@ -25,7 +25,6 @@ class LoginViewController: UIViewController {
         } catch {
             print(error)
         }
-        
     }
     
 }

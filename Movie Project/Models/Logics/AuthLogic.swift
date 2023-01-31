@@ -89,6 +89,10 @@ struct AuthLogic {
             print(newSession)
             let data = try JSONEncoder().encode(newSession)
             AppDelegate.defaults.set(data, forKey: "AccountSession")
+            print("Session inserted to defaults")
+            AppDelegate.sessionState = true
+            NotificationCenter.default.post(name: Notification.Name("Session state"), object: nil)
+            
         } catch let error {
             print(error)
         }
@@ -96,6 +100,9 @@ struct AuthLogic {
     
     static func removeSession() {
         AppDelegate.defaults.removeObject(forKey: "AccountSession")
+        print("Session delete from defaults")
+        AppDelegate.sessionState = false
+        NotificationCenter.default.post(name: Notification.Name("Session state"), object: nil)
     }
     
     static func getSession() -> String? {
@@ -109,10 +116,5 @@ struct AuthLogic {
         }
         return nil
     }
-    
-    
-    
-    
-    
     
 }

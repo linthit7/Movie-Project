@@ -101,6 +101,7 @@ class Request {
                         print("Validation Success")
                         createSession(validatedToken: validatedToken)
                         AuthLogic.removeAuthToken()
+                        self.generateNewRequestToken()
                     } else {
                         print("Validation failed")
                         AuthLogic.removeAuthToken()
@@ -164,6 +165,7 @@ class Request {
                 case .some(let data) :
                     let jSON = JSON(data)
                     if jSON["success"].boolValue {
+                        print("Session delete from server")
                         AuthLogic.removeSession()
                     } else {
                         print("There is no session to delete")

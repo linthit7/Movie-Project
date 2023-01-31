@@ -15,17 +15,22 @@ class AccountViewController: UIViewController {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        title = "My Account"
+        navigationItem.hidesBackButton = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
-            self.title = "My Account"
             Request.getAccountDetail(sessionID: AuthLogic.getSession()!) { [weak self] account in
-                
                 self?.profileImageView.sd_setImage(with: URL(string: "\(Support.posterImageURL)\(account.avatar.tmdb.values.first!)"))
                 self?.nameLabel.text = account.name
-                self?.usernameLabel.text = account.username
-                self?.idLabel.text = account.id
+                self?.usernameLabel.text = ("username: \(account.username!)")
+                self?.idLabel.text = ("id: \(account.id!)")
             }
         }
     }

@@ -22,9 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AuthLogic.checkToken()
         if AuthLogic.checkSession() == true {
             AppDelegate.sessionState = true
-//            Request.getAccountDetail(sessionID: AuthLogic.getSession()!)
+            print("Session state is true")
         } else {
             AppDelegate.sessionState = false
+            print("Session state is false")
         }
         
         

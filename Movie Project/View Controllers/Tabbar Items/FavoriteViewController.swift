@@ -15,14 +15,14 @@ class FavoriteViewController: UIViewController {
     var favorite: [Movie] = []
     
     override func viewWillAppear(_ animated: Bool) {
+        
         DispatchQueue.main.async {
             self.title = "Favorite Movies"
-            
             self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.favoriteCollectionView.delegate = self
             self.favoriteCollectionView.dataSource = self
             self.favoriteCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-            self.movieFetch()
+            self.favorite = MovieLogic.movieFetch()!
             self.favoriteCollectionView.reloadData()
         }
     }
@@ -30,20 +30,6 @@ class FavoriteViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         favoriteCollectionView.frame = view.bounds
-    }
-    
-    private func movieFetch() {
-        favorite = []
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let  fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
-        
-        do {
-            guard let result = try managedContext.fetch(fetchRequest) as? [Movie] else { return }
-            self.favorite = result
-        } catch let error as NSError {
-            debugPrint(error)
-        }
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {

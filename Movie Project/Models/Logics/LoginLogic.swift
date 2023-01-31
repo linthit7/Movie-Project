@@ -21,4 +21,5 @@ struct LoginLogic {
             throw LoginError.wrongCredentials
         }
     }
+    
 }

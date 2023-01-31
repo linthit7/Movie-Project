@@ -12,29 +12,20 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        self.setUpTabBar()
-    }
-    
-    private func setUpTabBar() {
-        
-        let popularVC = UINavigationController(rootViewController: PopularViewController())
-        let lastestVC = UINavigationController(rootViewController: UpcomingViewController())
-        let favoriteVC = UINavigationController(rootViewController: FavoriteViewController())
-        let accountVC = UINavigationController(rootViewController: AppDelegate.sessionState ? AccountViewController() : LoginViewController() )
-        
-        popularVC.tabBarItem.image = UIImage(systemName: "10.square.fill")
-        lastestVC.tabBarItem.image = UIImage(systemName: "arrow.up.square.fill")
-        favoriteVC.tabBarItem.image = UIImage(systemName: "star.fill")
-        accountVC.tabBarItem.image = UIImage(systemName: "person.crop.square")
-        
-        popularVC.title = "Popular Movies"
-        lastestVC.title = "Upcoming Movies"
-        favoriteVC.title = "Favorite Movies"
-        accountVC.title = "My Account"
-        
         tabBar.tintColor = .label
-        setViewControllers([popularVC, lastestVC, favoriteVC, accountVC], animated: true)
+        
+        setViewControllers(Tabbar.setUpTabbar(), animated: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(setupSessionState), name: Notification.Name("Session state"), object: nil)
     }
     
+    @objc private func setupSessionState(){
+        if AppDelegate.sessionState {
+            setViewControllers(Tabbar.setUpTabbar(), animated: true)
+            print("login successful")
+        } else {
+            setViewControllers(Tabbar.setUpTabbar(), animated: true)
+            print("logout successful")
+        }
+    }
+
 }

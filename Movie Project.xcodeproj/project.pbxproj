@@ -21,6 +21,7 @@
 		F924490F296886FB00C26EAE /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = F924490E296886FB00C26EAE /* Support.swift */; };
 		F9244912296AFF0400C26EAE /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */; };
 		F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */; };
+		F93CF9C12988BC92009DF0E8 /* TabbarLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93CF9C02988BC92009DF0E8 /* TabbarLogic.swift */; };
 		F9706DCC2983D30C00B57990 /* CustomCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9706DCB2983D30C00B57990 /* CustomCollectionView.swift */; };
 		F971101E29812B3E0018687D /* MovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F971101C29812B3E0018687D /* MovieViewController.swift */; };
 		F971101F29812B3E0018687D /* MovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F971101D29812B3E0018687D /* MovieViewController.xib */; };
@@ -65,6 +66,7 @@
 		F924490E296886FB00C26EAE /* Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Support.swift; sourceTree = "<group>"; };
 		F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
+		F93CF9C02988BC92009DF0E8 /* TabbarLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarLogic.swift; sourceTree = "<group>"; };
 		F9706DCB2983D30C00B57990 /* CustomCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionView.swift; sourceTree = "<group>"; };
 		F971101C29812B3E0018687D /* MovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewController.swift; sourceTree = "<group>"; };
 		F971101D29812B3E0018687D /* MovieViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieViewController.xib; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				F9184D992971A0CB00729F46 /* MovieLogic.swift */,
 				F9D403DE2986573400DA3DA9 /* AuthLogic.swift */,
 				F9D403E02987670100DA3DA9 /* LoginLogic.swift */,
+				F93CF9C02988BC92009DF0E8 /* TabbarLogic.swift */,
 			);
 			path = Logics;
 			sourceTree = "<group>";
@@ -433,6 +436,7 @@
 				F9711029298157540018687D /* MovieInfoTableViewCell.swift in Sources */,
 				F924490F296886FB00C26EAE /* Support.swift in Sources */,
 				F9FD03E62966BA2A0039FA0B /* PopularViewController.swift in Sources */,
+				F93CF9C12988BC92009DF0E8 /* TabbarLogic.swift in Sources */,
 				F9706DCC2983D30C00B57990 /* CustomCollectionView.swift in Sources */,
 				F9D403DB2986448400DA3DA9 /* Auth.swift in Sources */,
 				F971102429812C170018687D /* MovieCollectionTableViewCell.swift in Sources */,

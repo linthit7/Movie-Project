@@ -58,4 +58,18 @@ struct MovieLogic {
         }
         return genreNameArray
     }
+    
+    static func movieFetch() -> [Movie]?{
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return nil}
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let  fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")
+        
+        do {
+            guard let result = try managedContext.fetch(fetchRequest) as? [Movie] else {return nil}
+            return result
+        } catch let error as NSError {
+            debugPrint(error)
+        }
+        return nil
+    }
 }

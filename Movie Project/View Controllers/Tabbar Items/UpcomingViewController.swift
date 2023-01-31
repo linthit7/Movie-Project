@@ -53,7 +53,6 @@ class UpcomingViewController: UIViewController {
     }
     
     @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
-        
         navigationController?.pushViewController(searchResultsVC, animated: true)
     }
     
