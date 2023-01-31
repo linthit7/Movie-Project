@@ -37,19 +37,15 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        checkFavoriteState(viewController: vc)
-        configureNavItem()
+        setupFavoriteButton()
         table.register(UINib(nibName: MovieCollectionTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: MovieCollectionTableViewCell.reuseIdentifier)
         table.register(UINib(nibName: MovieInfoTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: MovieInfoTableViewCell.reuseIdentifier)
-//        view.addSubview(table)
         table.delegate = self
         table.dataSource = self
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        currentMovieID = MovieDetailLogic.setUpMovieDetail(viewController: vc, getMovie: watchListMovie)
         
         setUpMovieDetail(viewController: vc)
 
@@ -70,11 +66,12 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//
-//            table.frame = view.bounds
-//    }
+    private func setupFavoriteButton() {
+        if AppDelegate.sessionState {
+            checkFavoriteState(viewController: vc)
+            configureNavItem()
+        }
+    }
     
     private func configureNavItem() {
         navigationController?.navigationBar.tintColor = .label
@@ -92,7 +89,15 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @objc private func favoriteAdd(_ sender: UIButton) {
         favoriteState = true
         configureNavItem()
-        moviePersist(viewController: vc)
+        if vc == getVC.favoriteVC {
+            Request.updateFavorite(mediaId: tempID, favorite: true, sessionId: AuthLogic.getSession()!) { [weak self] _ in
+                self?.moviePersist(viewController: (self?.vc)!)
+            }
+        } else {
+            Request.updateFavorite(mediaId: movie.id, favorite: true, sessionId: AuthLogic.getSession()!) { [weak self] _ in
+                self?.moviePersist(viewController: (self?.vc)!)
+            }
+        }
     }
     
     private func checkFavoriteState(viewController: String) {
@@ -138,6 +143,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
             nsMovie.setValue(tempGenre, forKey: "genreName")
             do {
                 try managedContext.save()
+                print("movie persisted")
             } catch let error {
                 print(error)
             }
@@ -159,6 +165,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 nsMovie.setValue(genreName, forKey: "genreName")
                 do {
                     try managedContext.save()
+                    print("movie persisted")
                 } catch let error {
                     print(error)
                 }
@@ -171,7 +178,17 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @objc private func favoriteRemove(_ sender: UIButton) {
         favoriteState = false
         configureNavItem()
-        MovieLogic.delete(id: vc == getVC.favoriteVC ? Int(tempMovie.movieID) : movie.id!)
+        
+        if vc == getVC.favoriteVC {
+            Request.updateFavorite(mediaId: tempID, favorite: false, sessionId: AuthLogic.getSession()!) { [self] _ in
+                MovieLogic.delete(id: vc == getVC.favoriteVC ? Int(tempMovie.movieID) : movie.id!)
+            }
+        } else {
+            Request.updateFavorite(mediaId: movie.id, favorite: false, sessionId: AuthLogic.getSession()!) { [self] _ in
+                MovieLogic.delete(id: vc == getVC.favoriteVC ? Int(tempMovie.movieID) : movie.id!)
+            }
+        }
+        
     }
     
     private func setUpMovieDetail(viewController: String) {
@@ -179,15 +196,6 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
             self.currentMovieID = Int(watchListMovie.movieID)
         }
     }
-    
-//    private func genreIDArrayConversion(insert intArray: [JSON]) {
-//        for g in 0..<intArray.count {
-//            let genreInt: Int = intArray[g].rawValue as! Int
-//            genreNameArray.append(Genre(genreID: genreInt).genreName)
-//        }
-//    }
-    
-    
     
     //MARK: - UITableViewDelegate & DataSource
     

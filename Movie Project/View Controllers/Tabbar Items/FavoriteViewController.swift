@@ -11,32 +11,44 @@ import CoreData
 class FavoriteViewController: UIViewController {
     
     @IBOutlet weak var favoriteCollectionView: UICollectionView!
-    
+    @IBOutlet weak var pleaseLoginLabel: UILabel!
     var favorite: [Movie] = []
-    
+
     override func viewWillAppear(_ animated: Bool) {
-        
-        DispatchQueue.main.async {
-            self.title = "Favorite Movies"
-            self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-            self.favoriteCollectionView.delegate = self
-            self.favoriteCollectionView.dataSource = self
-            self.favoriteCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-            self.favorite = MovieLogic.movieFetch()!
-            self.favoriteCollectionView.reloadData()
-        }
+        super.viewWillAppear(animated)
+        setupFavoriteView()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         favoriteCollectionView.frame = view.bounds
+    }
+    
+    private func setupFavoriteView() {
+        if AppDelegate.sessionState {
+            DispatchQueue.main.async {
+                self.title = "Favorite Movies"
+                self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+                self.favoriteCollectionView.delegate = self
+                self.favoriteCollectionView.dataSource = self
+                self.favoriteCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
+                self.favorite = MovieLogic.movieFetch()!
+                self.favoriteCollectionView.reloadData()
+            }
+            print("Online favorite")
+        } else {
+            DispatchQueue.main.async {
+                self.favoriteCollectionView.alpha = 0
+            }
+            print("Offline favorite")
+        }
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
         
         let movieVC = MovieViewController()
         let dataPassingQueue = DispatchQueue(label: "dataPassingRequest", qos: .userInitiated)
-        
         dataPassingQueue.async {
             movieVC.watchListMovie = self.favorite[indexPath.row]
             movieVC.vc = getVC.favoriteVC

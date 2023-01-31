@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FavoriteViewController" customModule="Movie_Project" customModuleProvider="target">
             <connections>
                 <outlet property="favoriteCollectionView" destination="ogm-in-MbO" id="URg-pm-c2r"/>
+                <outlet property="pleaseLoginLabel" destination="H3X-PP-5Qw" id="d2S-zZ-vUZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -19,6 +20,12 @@
             <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please login your account to add favorite movies." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3X-PP-5Qw">
+                    <rect key="frame" x="18" y="47" width="354" height="763"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ogm-in-MbO">
                     <rect key="frame" x="0.0" y="47" width="390" height="763"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -32,10 +39,15 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="H3X-PP-5Qw" secondAttribute="bottom" id="43D-7g-lXU"/>
+                <constraint firstItem="H3X-PP-5Qw" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Gsn-wx-MQz"/>
+                <constraint firstItem="H3X-PP-5Qw" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="IZ2-A3-mg2"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ogm-in-MbO" secondAttribute="trailing" id="KRI-Vz-tsq"/>
                 <constraint firstItem="ogm-in-MbO" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="iYt-Lc-dAw"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="ogm-in-MbO" secondAttribute="bottom" id="pxh-XF-zEc"/>
                 <constraint firstItem="ogm-in-MbO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="sg8-aJ-9vp"/>
+                <constraint firstItem="H3X-PP-5Qw" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="18" id="tOJ-zF-9h5"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="H3X-PP-5Qw" secondAttribute="trailing" constant="18" id="zKL-gr-cc9"/>
             </constraints>
             <point key="canvasLocation" x="45" y="-11"/>
         </view>

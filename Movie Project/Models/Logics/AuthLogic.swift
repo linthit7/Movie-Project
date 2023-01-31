@@ -16,6 +16,7 @@ struct AuthLogic {
                 print("Existing Token")
                 print(data)
                 let removedUTC = data.expires_at.replacingOccurrences(of: "UTC", with: "")
+                print(removedUTC)
                 compareDate(expireDate: getExpireDate(tokenDate: removedUTC))
             } catch {
                 print(error)

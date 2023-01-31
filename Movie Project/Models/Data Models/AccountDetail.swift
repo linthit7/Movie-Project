@@ -41,3 +41,17 @@ struct Avatar {
         return avatar
     }
 }
+
+struct FavoriteResponse {
+    var success: Bool!
+    var status_code: Int!
+    var status_message: String!
+    
+    static func load(json: JSON) -> FavoriteResponse {
+        var favoriteResponse = FavoriteResponse()
+        favoriteResponse.success = json["success"].boolValue
+        favoriteResponse.status_code = json["status_code"].intValue
+        favoriteResponse.status_message = json["status_message"].stringValue
+        return favoriteResponse
+    }
+}

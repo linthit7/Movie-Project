@@ -177,5 +177,33 @@ class Request {
         }
     }
     
+    static func updateFavorite(mediaType: String = "movie", mediaId: Int, favorite: Bool, sessionId: String, completion: @escaping (FavoriteResponse) -> Void) {
+        let favoriteURL  = "\(Support.baseURL)\(Support.updateFavoriteEndPoint)?api_key=\(Support.apiKey)&session_id=\(sessionId)"
+        let params: Parameters = [
+            "media_type": mediaType,
+            "media_id": mediaId,
+            "favorite": favorite
+        ]
+        let requestQueue = DispatchQueue(label: "requestQueue", qos: .userInitiated)
+        requestQueue.async {
+            Alamofire.request(favoriteURL, method: .post, parameters: params, headers: nil).response { response in
+                switch response.data {
+                case .some(let data):
+                    print(params)
+                    print(favoriteURL)
+                    let jSON: JSON = JSON(data)
+                    let favResponse = FavoriteResponse.load(json: jSON)
+                    print(jSON)
+                    if favResponse.success {
+                        print("update themovie favorite")
+                        completion(favResponse)
+                    }
+                case .none:
+                    print("No response data for favorite")
+                }
+            }
+        }
+    }
+    
     
 }

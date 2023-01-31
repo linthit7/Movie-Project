@@ -37,6 +37,7 @@ struct MovieLogic {
             managedContext.delete(movie)
             do {
                 try managedContext.save()
+                print("movie delete from coredata")
             }
         } catch let error {
             print(error)
@@ -50,7 +51,7 @@ struct MovieLogic {
         }
     }
     
-    static func genreIDArrayConversion(insert intArray: [JSON]) -> [String]{
+    static func genreIDArrayConversion(insert intArray: [JSON]) -> [String] {
         var genreNameArray: [String] = []
         for g in 0..<intArray.count {
             let genreInt: Int = intArray[g].rawValue as! Int
@@ -59,7 +60,7 @@ struct MovieLogic {
         return genreNameArray
     }
     
-    static func movieFetch() -> [Movie]?{
+    static func movieFetch() -> [Movie]? {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return nil}
         let managedContext = appDelegate.persistentContainer.viewContext
         let  fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Movie")

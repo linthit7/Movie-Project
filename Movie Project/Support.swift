@@ -20,6 +20,7 @@ struct Support {
     static let newSessionEndPoint: String = "/authentication/session/new"
     static let accountEndPoint: String = "/account"
     static let deleteSessionEndPoint: String = "/authentication/session"
+    static let updateFavoriteEndPoint: String = "/account/\(acc.accountId)/favorite"
 }
 
 struct getVC {
@@ -33,4 +34,5 @@ struct getVC {
 struct acc {
     static let username: String = "linthit"
     static let password: String = "2023Upcoming"
+    static let accountId: String = "17182056"
 }
