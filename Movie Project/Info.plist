@@ -19,5 +19,12 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIImageRespectsSafeAreaInsets</key>
+		<true/>
+		<key>UIImageName</key>
+		<string>movie_projecticon</string>
+	</dict>
 </dict>
 </plist>

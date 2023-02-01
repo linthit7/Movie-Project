@@ -11,7 +11,7 @@ import SDWebImage
 class MovieCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "MovieCollectionViewCell"
-
+    
     @IBOutlet weak var movieImage: UIImageView!
     @IBOutlet weak var movieTitle: UILabel!
     

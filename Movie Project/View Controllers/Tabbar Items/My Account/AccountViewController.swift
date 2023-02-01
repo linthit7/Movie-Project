@@ -36,6 +36,7 @@ class AccountViewController: UIViewController {
     }
 
     @IBAction func logoutButtonTapped(_ sender: UIButton) {
+        navigationController?.pushViewController(Loading.accountLoading(), animated: false)
         Request.deleteSession(sessionID: AuthLogic.getSession()!)
     }
 }

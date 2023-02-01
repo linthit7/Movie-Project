@@ -19,39 +19,78 @@ class PopularViewController: UIViewController {
     var popularMoviePageCount: Int = 1
     var popularMoviePageTotal: Int = 0
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        request.movieRequest(url: getVC.popularVC) { movieList, _, total in
+//    let activityView = UIActivityIndicatorView()
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        DispatchQueue.main.async {
+//            self.title = "Popular Movies"
+//            self.navigationController?.navigationBar.tintColor = .label
+//            self.configureNavItem()
+//            self.showActivityIndicatory(true)
+//        }
+//        request.movieRequest(url: getVC.popularVC) { movieList, _, total in
+//            self.popularMovieList.append(contentsOf: movieList)
+//            self.popularMoviePageTotal = total
+//        }
+//        DispatchQueue.main.async {
+//            self.showActivityIndicatory(false)
+//            self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+//            self.popularCollectionView.dataSource = self
+//            self.popularCollectionView.delegate = self
+//            self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
+//            self.view.addSubview(self.popularCollectionView)
+//        }
+//    }
+//
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        popularCollectionView.frame = view.bounds
+//        activityView.frame = view.bounds
+//    }
+//
+//    func showActivityIndicatory(_ state: Bool) {
+//        if state {
+//            activityView.center = self.view.center
+//            activityView.hidesWhenStopped = true
+//            self.view.addSubview(activityView)
+//            activityView.startAnimating()
+//        } else {
+//            activityView.stopAnimating()
+//        }
+//    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
             self.popularMoviePageTotal = total
         }
-        
         DispatchQueue.main.async {
             self.title = "Popular Movies"
-            self.navigationController?.navigationBar.tintColor = .label
             self.configureNavItem()
             self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-            self.popularCollectionView.dataSource = self
             self.popularCollectionView.delegate = self
+            self.popularCollectionView.dataSource = self
             self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
             self.view.addSubview(self.popularCollectionView)
         }
     }
-    
+
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         popularCollectionView.frame = view.bounds
     }
     
+    
     private func configureNavItem() {
         let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
         navigationItem.rightBarButtonItem = searchItem
     }
-    @objc func searchItemTapped(_ sender: UIBarButtonItem) {
+    @objc private func searchItemTapped(_ sender: UIBarButtonItem) {
         navigationController?.pushViewController(SearchResultsViewController(), animated: true)
     }
-    
     private func movieDetailPassingMethod(for indexPath: IndexPath) {
         
         request.movieRequest(url: getVC.similarVC, id:  popularMovieList[indexPath.row].id) { movieResult, _, _ in
@@ -98,12 +137,16 @@ extension PopularViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let position = scrollView.contentOffset.y
         if position > (popularCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
-            
+//            DispatchQueue.main.async {
+//                self.showActivityIndicatory(true)
+//            }
+        
             request.movieRequest(url: getVC.popularVC, pagination: true, pageCount: popularMoviePageCount, pageTotal: popularMoviePageTotal) { movieResult, count, _ in
                 self.popularMovieList.append(contentsOf: movieResult)
                 self.popularMoviePageCount = count
                 
                 DispatchQueue.main.async {
+//                    self.showActivityIndicatory(false)
                     self.popularCollectionView.reloadData()
                 }
             }

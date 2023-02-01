@@ -13,12 +13,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     static let defaults = UserDefaults.standard
     static var sessionState: Bool = false
-    
+    static var accountLoadingState: Bool = false
+        
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        print(url!)
-        
+
+//        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+//        print(url!)
+         
         AuthLogic.checkToken()
         if AuthLogic.checkSession() == true {
             AppDelegate.sessionState = true
@@ -27,8 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             AppDelegate.sessionState = false
             print("Session state is false")
         }
-        
-        
         return true
     }
    

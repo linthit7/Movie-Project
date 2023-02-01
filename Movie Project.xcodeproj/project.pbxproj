@@ -29,6 +29,9 @@
 		F971102529812C170018687D /* MovieCollectionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F971102329812C170018687D /* MovieCollectionTableViewCell.xib */; };
 		F9711029298157540018687D /* MovieInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9711027298157540018687D /* MovieInfoTableViewCell.swift */; };
 		F971102A298157540018687D /* MovieInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9711028298157540018687D /* MovieInfoTableViewCell.xib */; };
+		F98E44CC298A21E800BF1096 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98E44CA298A21E800BF1096 /* LoadingViewController.swift */; };
+		F98E44CD298A21E800BF1096 /* LoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F98E44CB298A21E800BF1096 /* LoadingViewController.xib */; };
+		F98E44CF298A2A3600BF1096 /* LoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98E44CE298A2A3600BF1096 /* LoadingScreen.swift */; };
 		F9D403CF2985834500DA3DA9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D403CD2985834500DA3DA9 /* LoginViewController.swift */; };
 		F9D403D02985834500DA3DA9 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9D403CE2985834500DA3DA9 /* LoginViewController.xib */; };
 		F9D403DB2986448400DA3DA9 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D403DA2986448400DA3DA9 /* Auth.swift */; };
@@ -74,6 +77,9 @@
 		F971102329812C170018687D /* MovieCollectionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieCollectionTableViewCell.xib; sourceTree = "<group>"; };
 		F9711027298157540018687D /* MovieInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieInfoTableViewCell.swift; sourceTree = "<group>"; };
 		F9711028298157540018687D /* MovieInfoTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieInfoTableViewCell.xib; sourceTree = "<group>"; };
+		F98E44CA298A21E800BF1096 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		F98E44CB298A21E800BF1096 /* LoadingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingViewController.xib; sourceTree = "<group>"; };
+		F98E44CE298A2A3600BF1096 /* LoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreen.swift; sourceTree = "<group>"; };
 		F9D403CD2985834500DA3DA9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F9D403CE2985834500DA3DA9 /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		F9D403DA2986448400DA3DA9 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
@@ -148,10 +154,12 @@
 		F9244914296B018000C26EAE /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				F9FC3F8B298225CF0028FD62 /* Navbar Items */,
-				F9FC3F8A298225B70028FD62 /* Tabbar Items */,
 				F971101C29812B3E0018687D /* MovieViewController.swift */,
 				F971101D29812B3E0018687D /* MovieViewController.xib */,
+				F98E44CA298A21E800BF1096 /* LoadingViewController.swift */,
+				F98E44CB298A21E800BF1096 /* LoadingViewController.xib */,
+				F9FC3F8B298225CF0028FD62 /* Navbar Items */,
+				F9FC3F8A298225B70028FD62 /* Tabbar Items */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -221,6 +229,7 @@
 				F9D403DE2986573400DA3DA9 /* AuthLogic.swift */,
 				F9D403E02987670100DA3DA9 /* LoginLogic.swift */,
 				F93CF9C02988BC92009DF0E8 /* TabbarLogic.swift */,
+				F98E44CE298A2A3600BF1096 /* LoadingScreen.swift */,
 			);
 			path = Logics;
 			sourceTree = "<group>";
@@ -373,6 +382,7 @@
 				F9FD03F02966BA560039FA0B /* FavoriteViewController.xib in Resources */,
 				F9FD03D62966B1AF0039FA0B /* Assets.xcassets in Resources */,
 				F9DDDC512987A72700B0E5E9 /* AccountViewController.xib in Resources */,
+				F98E44CD298A21E800BF1096 /* LoadingViewController.xib in Resources */,
 				F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,6 +436,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F98E44CF298A2A3600BF1096 /* LoadingScreen.swift in Sources */,
 				F9184D9329705E4400729F46 /* Movie+CoreDataClass.swift in Sources */,
 				F9DDDC502987A72700B0E5E9 /* AccountViewController.swift in Sources */,
 				F9184D982971024D00729F46 /* Request.swift in Sources */,
@@ -433,6 +444,7 @@
 				F9D403DF2986573400DA3DA9 /* AuthLogic.swift in Sources */,
 				F9D403CF2985834500DA3DA9 /* LoginViewController.swift in Sources */,
 				F9184D9429705E4400729F46 /* Movie+CoreDataProperties.swift in Sources */,
+				F98E44CC298A21E800BF1096 /* LoadingViewController.swift in Sources */,
 				F9711029298157540018687D /* MovieInfoTableViewCell.swift in Sources */,
 				F924490F296886FB00C26EAE /* Support.swift in Sources */,
 				F9FD03E62966BA2A0039FA0B /* PopularViewController.swift in Sources */,
@@ -585,9 +597,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Movie Project/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -613,9 +624,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Movie Project/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

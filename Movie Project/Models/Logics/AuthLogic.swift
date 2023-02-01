@@ -41,9 +41,12 @@ struct AuthLogic {
     }
     
     static func getExpireDate(tokenDate: String) -> Date {
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+//        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        print(tokenDate, "from getExpireDate")
         let expireDate = dateFormatter.date(from: tokenDate)!
         return expireDate
     }
@@ -51,7 +54,7 @@ struct AuthLogic {
     static func compareDate(expireDate: Date) {
         let currentTime = Date()
         print(currentTime, "Current Time")
-        if currentTime.addingTimeInterval(900) > expireDate { 
+        if currentTime.addingTimeInterval(900) > expireDate {
             self.removeAuthToken()
             Request.generateNewRequestToken()
         } else {

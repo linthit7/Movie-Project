@@ -14,23 +14,20 @@ class UpcomingViewController: UIViewController {
     @IBOutlet weak var upcomingCollectionView: UICollectionView!
     
     let request = Request()
-    let searchResultsVC = SearchResultsViewController()
     var upcomingPageCount: Int = 1
     var upcomingPageTotal: Int = 0
     var upcomingMovieList: [MovieResult] = []
     var movieDetailList: [MovieResult] = []
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        title = "Upcoming Movies"
-        
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
             self.upcomingMovieList.append(contentsOf: movieList)
             self.upcomingPageTotal = total
         }
         DispatchQueue.main.async {
+            self.title = "Upcoming Movies"
             self.configureNavItem()
             self.upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.upcomingCollectionView.delegate = self
@@ -53,7 +50,7 @@ class UpcomingViewController: UIViewController {
     }
     
     @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
-        navigationController?.pushViewController(searchResultsVC, animated: true)
+        navigationController?.pushViewController(SearchResultsViewController(), animated: true)
     }
     
     private func movieDetailPassingMethod(for indexPath: IndexPath) {        

@@ -22,9 +22,10 @@ class SearchResultsViewController: UIViewController {
     var movieDetailList: [MovieResult] = []
     var queryName: String = ""
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-                
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         DispatchQueue.main.async {
             self.setupSearchController()
             self.navigationController?.navigationBar.tintColor = .label

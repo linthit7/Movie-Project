@@ -16,9 +16,9 @@ class FavoriteViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         setupFavoriteView()
     }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

@@ -20,6 +20,9 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginTapped(_ sender: UIButton) {
+        
+        navigationController?.pushViewController(Loading.accountLoading(), animated: false)
+
         do {
             try LoginLogic.checkCredentials(username: usernameTextField.text ?? "", password: passwordTextField.text ?? "")
         } catch {
