@@ -33,3 +33,10 @@ struct SettingsNotification {
         NotificationCenter.default.post(name: NSNotification.Name(noti.logout), object: nil)
     }
 }
+
+struct FavoriteNotification {
+    static func post(aMessage: String) {
+        let aMessage: [String: String] = ["favoriteMessage": aMessage]
+        NotificationCenter.default.post(name: Notification.Name(noti.favoriteState), object: nil, userInfo: aMessage)
+    }
+}

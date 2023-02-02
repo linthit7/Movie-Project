@@ -45,7 +45,7 @@ class Request {
         }
         let requestQueue = DispatchQueue(label: "Request", qos: .userInitiated)
         requestQueue.async {
-            Alamofire.request(certainURL, method: .get).responseJSON { [weak self] response in
+            Alamofire.request(certainURL, method: .get).responseJSON { response in
                 switch response.result {
                 case .success:
                     let jSON: JSON = JSON(response.result.value!)
@@ -55,13 +55,12 @@ class Request {
                         pageTotal = movie.total_pages
                     }
                     print("Request Called")
-
                     completion(movieList, pageCount, pageTotal)
                 case .failure(let error):
                     print("Error", error)
                 }
                 if pagination {
-                    self?.isPaginating = false
+                    self.isPaginating = false
                 }
             }
         }

@@ -43,6 +43,7 @@ struct noti {
     static let loginState: String = "Login state"
     static let authState: String = "Auth state"
     static let logout: String = "Logging Out"
+    static let favoriteState: String = "Favorite state"
 }
 
 struct authError {

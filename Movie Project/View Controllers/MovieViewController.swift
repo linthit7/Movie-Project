@@ -34,19 +34,16 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var tempPoster: String!
     var tempGenre: String!
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(favorite(_:)), name: Notification.Name(noti.favoriteState), object: nil)
         
         setupFavoriteButton()
         table.register(UINib(nibName: MovieCollectionTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: MovieCollectionTableViewCell.reuseIdentifier)
         table.register(UINib(nibName: MovieInfoTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: MovieInfoTableViewCell.reuseIdentifier)
         table.delegate = self
         table.dataSource = self
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
         setUpMovieDetail(viewController: vc)
 
         if watchListMovie != nil {
@@ -63,6 +60,13 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 self.tempPoster = tempObject.posterImage
                 self.tempGenre = tempObject.genreName
             }
+        }
+    }
+    
+    @objc
+    func favorite(_ notification: Notification) {
+        if let message = notification.userInfo?["favoriteMessage"] as? String {
+            view.makeToast(message, duration: 0.5, position: .top)
         }
     }
     
@@ -86,7 +90,8 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    @objc private func favoriteAdd(_ sender: UIButton) {
+    @objc
+    private func favoriteAdd(_ sender: UIButton) {
         favoriteState = true
         configureNavItem()
         if vc == getVC.favoriteVC {
@@ -143,7 +148,9 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
             nsMovie.setValue(tempGenre, forKey: "genreName")
             do {
                 try managedContext.save()
+                FavoriteNotification.post(aMessage: "Favorite Added")
                 print("movie persisted")
+                
             } catch let error {
                 print(error)
             }
@@ -165,6 +172,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 nsMovie.setValue(genreName, forKey: "genreName")
                 do {
                     try managedContext.save()
+                    FavoriteNotification.post(aMessage: "Favorite Added")
                     print("movie persisted")
                 } catch let error {
                     print(error)
@@ -175,7 +183,8 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    @objc private func favoriteRemove(_ sender: UIButton) {
+    @objc
+    private func favoriteRemove(_ sender: UIButton) {
         favoriteState = false
         configureNavItem()
         

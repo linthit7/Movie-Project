@@ -25,12 +25,13 @@ class PopularViewController: UIViewController {
         DispatchQueue.main.async {
             self.navigationItem.title = "Popular Movies"
             self.configureNavItem()
-            self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-            self.popularCollectionView.delegate = self
-            self.popularCollectionView.dataSource = self
-            self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-            self.view.addSubview(self.popularCollectionView)
+            
         }
+        self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+        self.popularCollectionView.delegate = self
+        self.popularCollectionView.dataSource = self
+        self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
+        self.view.addSubview(self.popularCollectionView)
         request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
             self.popularMoviePageTotal = total
@@ -48,7 +49,8 @@ class PopularViewController: UIViewController {
         let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
         navigationItem.rightBarButtonItem = searchItem
     }
-    @objc private func searchItemTapped(_ sender: UIBarButtonItem) {
+    @objc
+    private func searchItemTapped(_ sender: UIBarButtonItem) {
         navigationController?.pushViewController(SearchResultsViewController(), animated: true)
     }
     private func movieDetailPassingMethod(for indexPath: IndexPath) {

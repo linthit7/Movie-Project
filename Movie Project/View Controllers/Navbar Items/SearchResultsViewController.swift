@@ -38,7 +38,8 @@ class SearchResultsViewController: UIViewController {
         }
     }
     
-    @objc func showKeyboard() {
+    @objc
+    func showKeyboard() {
         searchController.searchBar.becomeFirstResponder()
     }
     

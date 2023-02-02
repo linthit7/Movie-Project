@@ -29,12 +29,12 @@ class UpcomingViewController: UIViewController {
         DispatchQueue.main.async {
             self.navigationItem.title = "Upcoming Movies"
             self.configureNavItem()
-            self.upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-            self.upcomingCollectionView.delegate = self
-            self.upcomingCollectionView.dataSource = self
-            self.upcomingCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-            self.view.addSubview(self.upcomingCollectionView)
         }
+        self.upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+        self.upcomingCollectionView.delegate = self
+        self.upcomingCollectionView.dataSource = self
+        self.upcomingCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
+        self.view.addSubview(self.upcomingCollectionView)
     }
     
     
@@ -49,7 +49,8 @@ class UpcomingViewController: UIViewController {
         navigationItem.rightBarButtonItem = searchItem
     }
     
-    @objc func searchItemTapped(_ sender: UIBarButtonItem!) {
+    @objc
+    func searchItemTapped(_ sender: UIBarButtonItem!) {
         navigationController?.pushViewController(SearchResultsViewController(), animated: true)
     }
     

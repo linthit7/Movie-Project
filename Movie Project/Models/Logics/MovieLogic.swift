@@ -38,6 +38,7 @@ struct MovieLogic {
             do {
                 try managedContext.save()
                 print("movie delete from coredata")
+                FavoriteNotification.post(aMessage: "Favorite Removed")
             }
         } catch let error {
             print(error)

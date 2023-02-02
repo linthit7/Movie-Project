@@ -29,13 +29,14 @@ class FavoriteViewController: UIViewController {
         if AppDelegate.sessionState {
             DispatchQueue.main.async {
                 self.navigationItem.title = "Favorite Movies"
-                self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-                self.favoriteCollectionView.delegate = self
-                self.favoriteCollectionView.dataSource = self
-                self.favoriteCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-                self.favorite = MovieLogic.movieFetch()!
-                self.favoriteCollectionView.reloadData()
+                
             }
+            self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+            self.favoriteCollectionView.delegate = self
+            self.favoriteCollectionView.dataSource = self
+            self.favoriteCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
+            self.favorite = MovieLogic.movieFetch()!
+            self.favoriteCollectionView.reloadData()
             print("Online favorite")
         } else {
             DispatchQueue.main.async {

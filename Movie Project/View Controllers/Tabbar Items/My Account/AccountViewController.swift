@@ -20,7 +20,7 @@ class AccountViewController: UIViewController {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
-            self.title = "My Account"
+            self.title = "Profile"
             Request.getAccountDetail(sessionID: AuthLogic.getSession()!) { [weak self] account in
                 self?.profileImageView.sd_setImage(with: URL(string: "\(Support.posterImageURL)\(account.avatar.tmdb.values.first!)"))
                 self?.nameLabel.text = account.name
