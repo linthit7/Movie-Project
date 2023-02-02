@@ -19,53 +19,9 @@ class PopularViewController: UIViewController {
     var popularMoviePageCount: Int = 1
     var popularMoviePageTotal: Int = 0
     
-//    let activityView = UIActivityIndicatorView()
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        DispatchQueue.main.async {
-//            self.title = "Popular Movies"
-//            self.navigationController?.navigationBar.tintColor = .label
-//            self.configureNavItem()
-//            self.showActivityIndicatory(true)
-//        }
-//        request.movieRequest(url: getVC.popularVC) { movieList, _, total in
-//            self.popularMovieList.append(contentsOf: movieList)
-//            self.popularMoviePageTotal = total
-//        }
-//        DispatchQueue.main.async {
-//            self.showActivityIndicatory(false)
-//            self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-//            self.popularCollectionView.dataSource = self
-//            self.popularCollectionView.delegate = self
-//            self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-//            self.view.addSubview(self.popularCollectionView)
-//        }
-//    }
-//
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        popularCollectionView.frame = view.bounds
-//        activityView.frame = view.bounds
-//    }
-//
-//    func showActivityIndicatory(_ state: Bool) {
-//        if state {
-//            activityView.center = self.view.center
-//            activityView.hidesWhenStopped = true
-//            self.view.addSubview(activityView)
-//            activityView.startAnimating()
-//        } else {
-//            activityView.stopAnimating()
-//        }
-//    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
-            self.popularMovieList.append(contentsOf: movieList)
-            self.popularMoviePageTotal = total
-        }
+        
         DispatchQueue.main.async {
             self.title = "Popular Movies"
             self.configureNavItem()
@@ -75,9 +31,13 @@ class PopularViewController: UIViewController {
             self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
             self.view.addSubview(self.popularCollectionView)
         }
+        request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
+            self.popularMovieList.append(contentsOf: movieList)
+            self.popularMoviePageTotal = total
+        }
     }
-
-
+    
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         popularCollectionView.frame = view.bounds
@@ -135,22 +95,21 @@ extension PopularViewController: UICollectionViewDelegate, UICollectionViewDataS
 extension PopularViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let position = scrollView.contentOffset.y
-        if position > (popularCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
-//            DispatchQueue.main.async {
-//                self.showActivityIndicatory(true)
-//            }
-        
+        if(self.popularCollectionView.contentOffset.y >= (self.popularCollectionView.contentSize.height - self.popularCollectionView.bounds.size.height))
+        {
             request.movieRequest(url: getVC.popularVC, pagination: true, pageCount: popularMoviePageCount, pageTotal: popularMoviePageTotal) { movieResult, count, _ in
                 self.popularMovieList.append(contentsOf: movieResult)
                 self.popularMoviePageCount = count
-                
+
                 DispatchQueue.main.async {
-//                    self.showActivityIndicatory(false)
                     self.popularCollectionView.reloadData()
                 }
             }
         }
+        
+//        if  popularCollectionView. {
+//            print("Refresh")
+//        }
     }
 }
 

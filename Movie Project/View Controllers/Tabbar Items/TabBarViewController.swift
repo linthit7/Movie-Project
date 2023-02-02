@@ -11,30 +11,24 @@ class TabBarViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .white
         tabBar.tintColor = .label
         
         setViewControllers(Tabbar.setUpTabbar(), animated: false)
-        NotificationCenter.default.addObserver(self, selector: #selector(setupSessionState), name: Notification.Name("Session state"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(loadingScreen), name: Notification.Name("Loading State"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(setupSessionState), name: Notification.Name(noti.sessionState), object: nil)
     }
     
-    @objc private func setupSessionState(){
+    @objc
+    private func setupSessionState() {
         if AppDelegate.sessionState {
             setViewControllers(Tabbar.setUpTabbar(), animated: false)
             tabBar.isUserInteractionEnabled = true
+            self.view.makeToast("Login Succeed", duration: 1, position: .bottom)
             print("login successful")
         } else {
             setViewControllers(Tabbar.setUpTabbar(), animated: false)
             tabBar.isUserInteractionEnabled = true
+            self.view.makeToast("Logout Succeed", duration: 1, position: .bottom)
             print("logout successful")
-        }
-    }
-    
-    @objc private func loadingScreen() {
-        if AppDelegate.accountLoadingState {
-            tabBar.isUserInteractionEnabled = false
-            print("tabbar interaction disabled")
         }
     }
 

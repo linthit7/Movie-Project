@@ -54,6 +54,8 @@ class Request {
                     if pageTotal == 0 {
                         pageTotal = movie.total_pages
                     }
+                    print("Request Called")
+
                     completion(movieList, pageCount, pageTotal)
                 case .failure(let error):
                     print("Error", error)

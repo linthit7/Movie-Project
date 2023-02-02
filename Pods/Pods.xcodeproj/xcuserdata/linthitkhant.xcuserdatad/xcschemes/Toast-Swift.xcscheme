@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81B003E131DBE752057995A0EB17F573"
-               BuildableName = "Pods_Movie_Project.framework"
-               BlueprintName = "Pods-Movie Project"
+               BlueprintIdentifier = "B990BD87169C76A3ED3FE8A9258D91A3"
+               BuildableName = "Toast_Swift.framework"
+               BlueprintName = "Toast-Swift"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

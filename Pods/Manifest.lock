@@ -4,23 +4,27 @@ PODS:
     - SDWebImage/Core (= 5.14.2)
   - SDWebImage/Core (5.14.2)
   - SwiftyJSON (4.3.0)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - Alamofire
   - SDWebImage (~> 5.0)
   - SwiftyJSON (~> 4.0)
+  - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - SDWebImage
     - SwiftyJSON
+    - Toast-Swift
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   SDWebImage: b9a731e1d6307f44ca703b3976d18c24ca561e84
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 1843358e0c617d6a00d54875e8330c60503aed7f
+PODFILE CHECKSUM: f1e7e0ad1831581c9e1f8eefe7b805980c222467
 
 COCOAPODS: 1.11.3

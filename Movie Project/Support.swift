@@ -36,3 +36,8 @@ struct acc {
     static let password: String = "2023Upcoming"
     static let accountId: String = "17182056"
 }
+
+struct noti {
+    static let sessionState: String = "Session state"
+    static let loadingState: String = "Loading state"
+}

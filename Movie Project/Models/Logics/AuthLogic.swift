@@ -95,8 +95,7 @@ struct AuthLogic {
             AppDelegate.defaults.set(data, forKey: "AccountSession")
             print("Session inserted to defaults")
             AppDelegate.sessionState = true
-            NotificationCenter.default.post(name: Notification.Name("Session state"), object: nil)
-            
+            NotificationCenter.default.post(name: Notification.Name(noti.sessionState), object: nil)
         } catch let error {
             print(error)
         }
@@ -106,7 +105,7 @@ struct AuthLogic {
         AppDelegate.defaults.removeObject(forKey: "AccountSession")
         print("Session delete from defaults")
         AppDelegate.sessionState = false
-        NotificationCenter.default.post(name: Notification.Name("Session state"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name(noti.sessionState), object: nil)
     }
     
     static func getSession() -> String? {

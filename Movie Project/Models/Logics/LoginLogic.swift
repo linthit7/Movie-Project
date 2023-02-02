@@ -18,6 +18,7 @@ struct LoginLogic {
         if un == acc.username, pw == acc.password {
             
             Request.validateWithUser(username: un, password: pw, requestToken: AuthLogic.getAuthToken()!)
+            
         } else {
             throw LoginError.wrongCredentials
         }

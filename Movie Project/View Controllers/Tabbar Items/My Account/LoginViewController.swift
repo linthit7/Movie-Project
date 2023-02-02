@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Toast_Swift
 
 class LoginViewController: UIViewController {
     
@@ -21,8 +22,9 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginTapped(_ sender: UIButton) {
         
-        navigationController?.pushViewController(Loading.accountLoading(), animated: false)
-
+        AppDelegate.accountLoadingState = true
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: noti.loadingState), object: nil)
+        self.view.makeToastActivity(.center)
         do {
             try LoginLogic.checkCredentials(username: usernameTextField.text ?? "", password: passwordTextField.text ?? "")
         } catch {
