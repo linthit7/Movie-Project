@@ -7,9 +7,14 @@
 
 import Foundation
 
+enum AuthError: Error {
+    case failToGetAuthToken
+    case failToCompareDate
+}
+
 struct AuthLogic {
     
-    static func checkToken() {
+    static func checkToken() throws {
         if let authToken = AppDelegate.defaults.data(forKey: "AuthToken") {
             do {
                 let data = try JSONDecoder().decode(AuthToken.self, from: authToken)
@@ -17,12 +22,13 @@ struct AuthLogic {
                 print(data)
                 let removedUTC = data.expires_at.replacingOccurrences(of: "UTC", with: "")
                 print(removedUTC)
-                compareDate(expireDate: getExpireDate(tokenDate: removedUTC))
-            } catch {
-                print(error)
+                try compareDate(expireDate: getExpireDate(tokenDate: removedUTC))
+            }
+            catch let error as AuthError {
+                throw error
             }
         } else {
-            Request.generateNewRequestToken()
+             Request.generateNewRequestToken()
         }
     }
     
@@ -41,24 +47,24 @@ struct AuthLogic {
     }
     
     static func getExpireDate(tokenDate: String) -> Date {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-//        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        print(tokenDate, "from getExpireDate")
-        let expireDate = dateFormatter.date(from: tokenDate)!
-        return expireDate
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            print(tokenDate, "from getExpireDate")
+            let expireDate = dateFormatter.date(from: tokenDate)!
+            return expireDate
     }
     
-    static func compareDate(expireDate: Date) {
+    static func compareDate(expireDate: Date) throws{
         let currentTime = Date()
         print(currentTime, "Current Time")
         if currentTime.addingTimeInterval(900) > expireDate {
             self.removeAuthToken()
             Request.generateNewRequestToken()
+            
         } else {
             print(expireDate, "Expire Time")
+            throw AuthError.failToCompareDate
         }
     }
     
@@ -95,7 +101,7 @@ struct AuthLogic {
             AppDelegate.defaults.set(data, forKey: "AccountSession")
             print("Session inserted to defaults")
             AppDelegate.sessionState = true
-            NotificationCenter.default.post(name: Notification.Name(noti.sessionState), object: nil)
+            SessionNotfication.post(aMessage: "Login Successful")
         } catch let error {
             print(error)
         }
@@ -105,7 +111,7 @@ struct AuthLogic {
         AppDelegate.defaults.removeObject(forKey: "AccountSession")
         print("Session delete from defaults")
         AppDelegate.sessionState = false
-        NotificationCenter.default.post(name: Notification.Name(noti.sessionState), object: nil)
+        SessionNotfication.post(aMessage: "Logout Successful")
     }
     
     static func getSession() -> String? {

@@ -18,18 +18,28 @@ class LoginViewController: UIViewController {
         
         usernameTextField.text = acc.username
         passwordTextField.text = acc.password
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(wrongCredentials), name: NSNotification.Name(rawValue: noti.loginState), object: nil)
     }
     
     @IBAction func loginTapped(_ sender: UIButton) {
-        
-        AppDelegate.accountLoadingState = true
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: noti.loadingState), object: nil)
-        self.view.makeToastActivity(.center)
+        view.endEditing(true)
         do {
+            AppDelegate.accountLoadingState = true
             try LoginLogic.checkCredentials(username: usernameTextField.text ?? "", password: passwordTextField.text ?? "")
-        } catch {
-            print(error)
+            self.view.makeToastActivity(.center)
+        } catch let (error) {
+            if error as! LoginError == LoginError.wrongCredentials {
+                LoginNotification.post()
+            }
         }
+    }
+    
+    @objc
+    private func wrongCredentials() {
+        self.view.makeToast("Wrong Credentials", duration: 0.5, position: .top)
+        usernameTextField.text?.removeAll()
+        passwordTextField.text?.removeAll()
     }
     
 }

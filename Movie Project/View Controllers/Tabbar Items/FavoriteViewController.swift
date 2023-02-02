@@ -28,7 +28,7 @@ class FavoriteViewController: UIViewController {
     private func setupFavoriteView() {
         if AppDelegate.sessionState {
             DispatchQueue.main.async {
-                self.title = "Favorite Movies"
+                self.navigationItem.title = "Favorite Movies"
                 self.favoriteCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
                 self.favoriteCollectionView.delegate = self
                 self.favoriteCollectionView.dataSource = self

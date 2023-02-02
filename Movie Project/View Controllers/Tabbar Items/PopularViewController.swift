@@ -23,7 +23,7 @@ class PopularViewController: UIViewController {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
-            self.title = "Popular Movies"
+            self.navigationItem.title = "Popular Movies"
             self.configureNavItem()
             self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.popularCollectionView.delegate = self
@@ -106,10 +106,7 @@ extension PopularViewController: UIScrollViewDelegate {
                 }
             }
         }
-        
-//        if  popularCollectionView. {
-//            print("Refresh")
-//        }
+
     }
 }
 

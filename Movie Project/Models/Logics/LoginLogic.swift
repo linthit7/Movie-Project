@@ -14,11 +14,8 @@ enum LoginError: Error {
 struct LoginLogic {
     
     static func checkCredentials(username un: String, password pw: String) throws {
-        
         if un == acc.username, pw == acc.password {
-            
             Request.validateWithUser(username: un, password: pw, requestToken: AuthLogic.getAuthToken()!)
-            
         } else {
             throw LoginError.wrongCredentials
         }

@@ -40,4 +40,12 @@ struct acc {
 struct noti {
     static let sessionState: String = "Session state"
     static let loadingState: String = "Loading state"
+    static let loginState: String = "Login state"
+    static let authState: String = "Auth state"
+    static let logout: String = "Logging Out"
+}
+
+struct authError {
+    static let cantGetAuth: String = "Failed to grab AuthToken from UserDefaults"
+    static let failToCompare: String = "Failed to compare dates"
 }

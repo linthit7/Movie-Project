@@ -27,7 +27,7 @@ class UpcomingViewController: UIViewController {
             self.upcomingPageTotal = total
         }
         DispatchQueue.main.async {
-            self.title = "Upcoming Movies"
+            self.navigationItem.title = "Upcoming Movies"
             self.configureNavItem()
             self.upcomingCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
             self.upcomingCollectionView.delegate = self

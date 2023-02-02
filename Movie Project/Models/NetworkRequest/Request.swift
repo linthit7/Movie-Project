@@ -78,8 +78,7 @@ class Request {
                     let newToken = AuthToken.createNewToken(json: jSON)
                     AuthLogic.insertToken(newAuthToken: newToken)
                     
-                case .failure(let error):
-                    print(error)
+                case .failure(let error): print(error)
                 }
             }
         }

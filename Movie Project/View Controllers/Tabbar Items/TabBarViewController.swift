@@ -14,21 +14,32 @@ class TabBarViewController: UITabBarController {
         tabBar.tintColor = .label
         
         setViewControllers(Tabbar.setUpTabbar(), animated: false)
-        NotificationCenter.default.addObserver(self, selector: #selector(setupSessionState), name: Notification.Name(noti.sessionState), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(setupSessionState(_:)), name: Notification.Name(noti.sessionState), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(errorMessage(_:)), name: Notification.Name(noti.authState), object: nil)
     }
     
     @objc
-    private func setupSessionState() {
+    private func setupSessionState(_ notification: NSNotification) {
         if AppDelegate.sessionState {
             setViewControllers(Tabbar.setUpTabbar(), animated: false)
             tabBar.isUserInteractionEnabled = true
-            self.view.makeToast("Login Succeed", duration: 1, position: .bottom)
-            print("login successful")
+            if let message = notification.userInfo?["accountMessage"] as? String {
+                view.makeToast(message, duration: 1, position: .top)
+            }
         } else {
             setViewControllers(Tabbar.setUpTabbar(), animated: false)
             tabBar.isUserInteractionEnabled = true
-            self.view.makeToast("Logout Succeed", duration: 1, position: .bottom)
-            print("logout successful")
+            if let message = notification.userInfo?["accountMessage"] as? String {
+                view.makeToast(message, duration: 1, position: .top)
+            }
+        }
+    }
+    
+    @objc
+    private func errorMessage(_ notification: NSNotification) {
+        print("Making Toast")
+        if let message = notification.userInfo?["errorMessage"] as? String {
+            view.makeToast(message, duration: 1, position: .top)
         }
     }
 

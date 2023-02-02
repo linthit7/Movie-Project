@@ -16,17 +16,11 @@ class AccountViewController: UIViewController {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        title = "My Account"
-        navigationItem.hidesBackButton = true
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         DispatchQueue.main.async {
+            self.title = "My Account"
             Request.getAccountDetail(sessionID: AuthLogic.getSession()!) { [weak self] account in
                 self?.profileImageView.sd_setImage(with: URL(string: "\(Support.posterImageURL)\(account.avatar.tmdb.values.first!)"))
                 self?.nameLabel.text = account.name
@@ -34,13 +28,6 @@ class AccountViewController: UIViewController {
                 self?.idLabel.text = ("id: \(account.id!)")
             }
         }
-    }
-
-    @IBAction func logoutButtonTapped(_ sender: UIButton) {
-        AppDelegate.accountLoadingState = true
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: noti.loadingState), object: nil)
-        self.view.makeToastActivity(.center)
-        Request.deleteSession(sessionID: AuthLogic.getSession()!)
     }
     
 }

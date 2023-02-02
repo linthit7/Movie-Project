@@ -14,13 +14,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static let defaults = UserDefaults.standard
     static var sessionState: Bool = false
     static var accountLoadingState: Bool = false
-        
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-//        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-//        print(url!)
-         
-        AuthLogic.checkToken()
+        
+        //        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        //        print(url!)
+        
+        do {
+            try AuthLogic.checkToken()
+        } catch {
+            switch error {
+            case AuthError.failToGetAuthToken:
+                Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+                    AuthNotification.post(aMessage: authError.cantGetAuth)
+                }
+            case AuthError.failToCompareDate:
+                Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+                    AuthNotification.post(aMessage: authError.failToCompare)
+                }
+            default: return false
+            }
+        }
+        
         if AuthLogic.checkSession() == true {
             AppDelegate.sessionState = true
             print("Session state is true")
@@ -30,19 +45,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return true
     }
-   
-
+    
+    
     // MARK: UISceneSession Lifecycle
-
+    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-
+    
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
     }
-
+    
     // MARK: - Core Data stack
-
+    
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Movie_Project")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -52,9 +67,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         return container
     }()
-
+    
     // MARK: - Core Data Saving support
-
+    
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -66,6 +81,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
 }
 
