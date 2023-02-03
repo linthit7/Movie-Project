@@ -22,10 +22,6 @@ class UpcomingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
-            self.upcomingMovieList.append(contentsOf: movieList)
-            self.upcomingPageTotal = total
-        }
         DispatchQueue.main.async {
             self.navigationItem.title = "Upcoming Movies"
             self.configureNavItem()
@@ -34,13 +30,14 @@ class UpcomingViewController: UIViewController {
         self.upcomingCollectionView.delegate = self
         self.upcomingCollectionView.dataSource = self
         self.upcomingCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-        self.view.addSubview(self.upcomingCollectionView)
-    }
-    
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        upcomingCollectionView.frame = view.bounds
+        request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
+            self.upcomingMovieList.append(contentsOf: movieList)
+            self.upcomingPageTotal = total
+            DispatchQueue.main.async {
+                self.upcomingCollectionView.reloadData()
+            }
+        }
+        
     }
     
     private func configureNavItem() {
@@ -96,20 +93,19 @@ extension UpcomingViewController: UICollectionViewDataSource, UICollectionViewDe
 
 extension UpcomingViewController: UIScrollViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let position = scrollView.contentOffset.y
-        if position > (upcomingCollectionView.contentSize.height-100 - scrollView.frame.size.height) {
-            
-            request.movieRequest(url: getVC.upcomingVC, pagination: true, pageCount: upcomingPageCount, pageTotal: upcomingPageTotal) { movieList, count, _ in
-                self.upcomingMovieList.append(contentsOf: movieList)
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("Calling request")
+        if upcomingPageCount < upcomingPageTotal {
+            request.movieRequest(url: getVC.upcomingVC, pagination: true, pageCount: upcomingPageCount, pageTotal: upcomingPageTotal) { movieResult, count, pageTotal in
+                self.upcomingMovieList.append(contentsOf: movieResult)
                 self.upcomingPageCount = count
-            
+                self.upcomingPageTotal = pageTotal
+                print("Page count", count)
+                
                 DispatchQueue.main.async {
                     self.upcomingCollectionView.reloadData()
                 }
             }
-            
-            
         }
     }
 }

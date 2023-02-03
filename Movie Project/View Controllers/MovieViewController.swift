@@ -235,7 +235,6 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 cell.titleLabel.text = movie.title
                 cell.descriptionLabel.text = movie.overview
                 cell.dateLabel.text = "Release Date: \(movie.release_date!)"
-//                genreIDArrayConversion(insert: movie.genre_ids)
                 if genreNameArray.isEmpty {
                     genreNameArray = MovieLogic.genreIDArrayConversion(insert: movie.genre_ids)
                 }

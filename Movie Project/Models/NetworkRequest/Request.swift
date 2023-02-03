@@ -37,6 +37,7 @@ class Request {
         var movie: OnlineMovie!
         var movieList: [MovieResult] = []
         
+        print("Request", pageTotal)
         if pageCount < pageTotal {
             pageCount += 1
         }
@@ -44,7 +45,7 @@ class Request {
             isPaginating = true
         }
         let requestQueue = DispatchQueue(label: "Request", qos: .userInitiated)
-        requestQueue.async {
+        DispatchQueue.global(qos: .userInteractive).async {
             Alamofire.request(certainURL, method: .get).responseJSON { response in
                 switch response.result {
                 case .success:
@@ -129,7 +130,6 @@ class Request {
                     if session.success {
                         print("Session created")
                         AuthLogic.insertSession(newSession: session)
-//                        self.getAccountDetail(sessionID: session.session_id)
                     } else {
                         print("Failed to create session")
                     }

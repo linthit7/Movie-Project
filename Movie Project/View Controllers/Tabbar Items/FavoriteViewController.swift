@@ -19,11 +19,6 @@ class FavoriteViewController: UIViewController {
         
         setupFavoriteView()
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        favoriteCollectionView.frame = view.bounds
-    }
     
     private func setupFavoriteView() {
         if AppDelegate.sessionState {

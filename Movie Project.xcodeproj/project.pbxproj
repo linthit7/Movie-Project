@@ -31,6 +31,7 @@
 		F9244912296AFF0400C26EAE /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */; };
 		F9244913296AFF0400C26EAE /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */; };
 		F93CF9C12988BC92009DF0E8 /* TabbarLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = F93CF9C02988BC92009DF0E8 /* TabbarLogic.swift */; };
+		F9447D8F298CBE1400989D17 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9447D8E298CBE1400989D17 /* Launch Screen.storyboard */; };
 		F9706DCC2983D30C00B57990 /* CustomCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9706DCB2983D30C00B57990 /* CustomCollectionView.swift */; };
 		F971101E29812B3E0018687D /* MovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F971101C29812B3E0018687D /* MovieViewController.swift */; };
 		F971101F29812B3E0018687D /* MovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F971101D29812B3E0018687D /* MovieViewController.xib */; };
@@ -85,6 +86,7 @@
 		F9244910296AFF0400C26EAE /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		F9244911296AFF0400C26EAE /* SearchResultsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
 		F93CF9C02988BC92009DF0E8 /* TabbarLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarLogic.swift; sourceTree = "<group>"; };
+		F9447D8E298CBE1400989D17 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		F9706DCB2983D30C00B57990 /* CustomCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionView.swift; sourceTree = "<group>"; };
 		F971101C29812B3E0018687D /* MovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewController.swift; sourceTree = "<group>"; };
 		F971101D29812B3E0018687D /* MovieViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MovieViewController.xib; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				F9244914296B018000C26EAE /* View Controllers */,
 				F9FD03D52966B1AF0039FA0B /* Assets.xcassets */,
 				F9FD03DA2966B1AF0039FA0B /* Info.plist */,
+				F9447D8E298CBE1400989D17 /* Launch Screen.storyboard */,
 				F9FD03D22966B1AD0039FA0B /* Movie_Project.xcdatamodeld */,
 			);
 			path = "Movie Project";
@@ -391,6 +394,7 @@
 			files = (
 				F971102A298157540018687D /* MovieInfoTableViewCell.xib in Resources */,
 				F971102529812C170018687D /* MovieCollectionTableViewCell.xib in Resources */,
+				F9447D8F298CBE1400989D17 /* Launch Screen.storyboard in Resources */,
 				F92448F92966D43E00C26EAE /* TabBarViewController.xib in Resources */,
 				F9039317298BBD34001DBEF2 /* ProfileTableViewCell.xib in Resources */,
 				F9FD03EC2966BA490039FA0B /* UpcomingViewController.xib in Resources */,
@@ -621,6 +625,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Movie Project/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -648,6 +653,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Movie Project/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (

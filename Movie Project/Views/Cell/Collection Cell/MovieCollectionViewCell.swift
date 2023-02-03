@@ -31,15 +31,11 @@ class MovieCollectionViewCell: UICollectionViewCell {
         insertImage(with: movie.posterImage!)
     }
     private func insertTitle(with title: String) {
-        DispatchQueue.main.async {
             self.movieTitle.text = title
-        }
     }
     private func insertImage(with image: String) {
         let posterImageURL = URL(string: "\(Support.posterImageURL)\(image)")
-        DispatchQueue.main.async {
-            self.movieImage.sd_setImage(with: posterImageURL)
-        }
+            self.movieImage.sd_setImage(with: posterImageURL, placeholderImage: UIImage(systemName: "placeholdertext.fill"))
     }
     
 }

@@ -21,29 +21,23 @@ class PopularViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         DispatchQueue.main.async {
             self.navigationItem.title = "Popular Movies"
             self.configureNavItem()
-            
         }
         self.popularCollectionView.register(UINib(nibName: MovieCollectionViewCell.identifier, bundle: nil), forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         self.popularCollectionView.delegate = self
         self.popularCollectionView.dataSource = self
         self.popularCollectionView.collectionViewLayout = CustomCollectionView.configureLayout()
-        self.view.addSubview(self.popularCollectionView)
         request.movieRequest(url: getVC.upcomingVC) { movieList, _, total in
             self.popularMovieList.append(contentsOf: movieList)
             self.popularMoviePageTotal = total
+            DispatchQueue.main.async {
+                self.popularCollectionView.reloadData()
+            }
         }
     }
-    
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        popularCollectionView.frame = view.bounds
-    }
-    
     
     private func configureNavItem() {
         let searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchItemTapped(_:)))
@@ -96,19 +90,19 @@ extension PopularViewController: UICollectionViewDelegate, UICollectionViewDataS
 
 extension PopularViewController: UIScrollViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if(self.popularCollectionView.contentOffset.y >= (self.popularCollectionView.contentSize.height - self.popularCollectionView.bounds.size.height))
-        {
-            request.movieRequest(url: getVC.popularVC, pagination: true, pageCount: popularMoviePageCount, pageTotal: popularMoviePageTotal) { movieResult, count, _ in
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("Calling request")
+        if popularMoviePageCount < popularMoviePageTotal {
+            request.movieRequest(url: getVC.popularVC, pagination: true, pageCount: popularMoviePageCount, pageTotal: popularMoviePageTotal) { movieResult, count, pageTotal in
                 self.popularMovieList.append(contentsOf: movieResult)
                 self.popularMoviePageCount = count
-
+                self.popularMoviePageTotal = pageTotal
+                print("Page count", count)
                 DispatchQueue.main.async {
                     self.popularCollectionView.reloadData()
                 }
             }
         }
-
     }
 }
 

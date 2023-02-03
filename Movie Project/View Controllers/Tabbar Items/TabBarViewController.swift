@@ -20,18 +20,10 @@ class TabBarViewController: UITabBarController {
     
     @objc
     private func setupSessionState(_ notification: NSNotification) {
-        if AppDelegate.sessionState {
-            setViewControllers(Tabbar.setUpTabbar(), animated: false)
-            tabBar.isUserInteractionEnabled = true
-            if let message = notification.userInfo?["accountMessage"] as? String {
-                view.makeToast(message, duration: 1, position: .top)
-            }
-        } else {
-            setViewControllers(Tabbar.setUpTabbar(), animated: false)
-            tabBar.isUserInteractionEnabled = true
-            if let message = notification.userInfo?["accountMessage"] as? String {
-                view.makeToast(message, duration: 1, position: .top)
-            }
+        setViewControllers(Tabbar.setUpTabbar(), animated: false)
+        tabBar.isUserInteractionEnabled = true
+        if let message = notification.userInfo?["accountMessage"] as? String {
+            view.makeToast(message, duration: 1, position: .top)
         }
     }
     
@@ -42,5 +34,5 @@ class TabBarViewController: UITabBarController {
             view.makeToast(message, duration: 1, position: .top)
         }
     }
-
+    
 }

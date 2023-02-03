@@ -15,10 +15,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        usernameTextField.text = acc.username
-//        passwordTextField.text = acc.password
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(wrongCredentials), name: NSNotification.Name(rawValue: noti.loginState), object: nil)
     }
     
